@@ -339,7 +339,7 @@ app.post('/fulfill-order', async (req, res) => {
 
 app.post('/create-session', async (req, res) => {
   try {
-    const { navToken, airlineName, searchData, language } = req.body;
+    const { navToken, airlineName, searchData, language, category, hotelId } = req.body;
     const sessionPNR = generatePNR();
     const { from, to } = searchData;
     const protocol = req.headers['x-forwarded-proto'] || 'http';
