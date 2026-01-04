@@ -130,10 +130,73 @@
                 setView('success');
                 setLoadingStage("Syncing Booking...");
                 
+                // 1. Create Booking (Original)
                 await fetch('/api/nsk/v3/booking', { method: 'POST' });
-                await fetch('/api/nsk/v5/booking/payments', { method: 'POST' });
-                await fetch('/api/nsk/v3/booking', { method: 'PUT' });
-                
+
+                // 2. Add Payment (Added with Mock Data)
+                const paymentReq = {
+                    "amount": 2147483647,
+                    "paymentFields": {
+                        "additionalProp1": "string",
+                        "additionalProp2": "string",
+                        "additionalProp3": "string"
+                    },
+                    "currencyCode": "str",
+                    "installments": 32767,
+                    "paymentMethodCode": "st",
+                    "deposit": true,
+                    "waiveFees": true
+                };
+
+                await fetch('/api/nsk/v5/booking/payments', { 
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(paymentReq)
+                });
+
+                // Mock Response for Logging
+                const paymentResMock = {
+                    "data": "string",
+                    "errors": [{
+                        "exception": { "Message": "string" },
+                        "code": "string", 
+                        "message": "string", 
+                        "type": "string", 
+                        "number": 99999
+                    }],
+                    "messages": []
+                };
+                logApiCall('/api/nsk/v5/booking/payments', 'POST', paymentReq, paymentResMock);
+
+
+                // 3. Put Commit Call (Added with Mock Data)
+                const commitReq = {
+                    "receivedBy": "string",
+                    "restrictionOverride": true,
+                    "hold": { "expiration": "2026-01-04T20:49:48.276Z" },
+                    "notifyContacts": true,
+                    "comments": [{
+                        "type": 0,
+                        "text": "string",
+                        "createdDate": "2026-01-04T20:49:48.276Z",
+                        "sendToBookingSource": true
+                    }],
+                    "contactTypesToNotify": ["s"],
+                    "receivedReference": "string"
+                };
+
+                await fetch('/api/nsk/v3/booking', { 
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(commitReq)
+                });
+
+                // Mock Response for Logging
+                const commitResMock = { "data": null };
+                logApiCall('/api/nsk/v3/booking', 'PUT', commitReq, commitResMock);
+
+
+                // 4. Fulfillment (Original)
                 if(currentOrderId) {
                     setLoadingStage("Confirming Payment...");
                     const fulfillReq = { order_id: currentOrderId, pnr: confirmedPnr };
