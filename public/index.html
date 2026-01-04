@@ -8,7 +8,7 @@
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Ubuntu:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&family=Ubuntu:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap');
         body { font-family: 'Inter', sans-serif; transition: all 0.3s ease; overflow-x: hidden; }
         .cebu-hero { background: url('https://images.unsplash.com/photo-1518391846015-55a9cc003b25?auto=format&fit=crop&w=1600&q=80') center/cover; }
         .vueling-hero { background: url('https://static.vueling.com/corporativeCMS/media/51086/en-winter-sale-2025.jpg') center/cover; min-height: 550px; }
@@ -18,10 +18,17 @@
         .animate-in { animation: fadeIn 0.6s ease-out forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
         .ticket-font { font-family: 'Space Mono', monospace; }
-        /* Log Console */
+        
+        /* Log Console Styling */
         .log-container { font-family: 'Monaco', 'Consolas', monospace; }
-        .log-entry { border-left: 2px solid #333; }
-        .log-entry:hover { border-left-color: #00AEEF; background: rgba(255,255,255,0.03); }
+        .log-entry { border-left: 2px solid #444; transition: all 0.2s; }
+        .log-entry:hover { border-left-color: #00AEEF; background: rgba(255,255,255,0.05); }
+        
+        /* Custom Scrollbar */
+        .custom-scroll::-webkit-scrollbar { width: 8px; height: 8px; }
+        .custom-scroll::-webkit-scrollbar-track { background: #1e1e1e; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #444; border-radius: 4px; }
+        .custom-scroll::-webkit-scrollbar-thumb:hover { background: #555; }
     </style>
 </head>
 <body class="bg-[#0a1120] text-black">
@@ -34,12 +41,14 @@
             vueling: { id: 'vueling', name: 'Vueling', logo: './vueling.png', primary: '#ffdb00', accent: '#333333', hero: 'vueling-hero', logoH: '70px', btnStyle: 'rounded-full font-bold' }
         };
 
-        // --- UPDATED DROPDOWNS TO MATCH PDF ROUTES ---
         const ORIGIN_OPTIONS = [
             { code: "MNL", name: "Manila (MNL)" },
             { code: "SIN", name: "Singapore (SIN)" },
             { code: "RUH", name: "Riyadh (RUH)" },
-            { code: "MEL", name: "Melbourne (MEL)" }
+            { code: "MEL", name: "Melbourne (MEL)" },
+            { code: "ENI", name: "El Nido (ENI)" },
+            { code: "PVG", name: "Shanghai (PVG)" },
+            { code: "CEB", name: "Cebu (CEB)" }
         ];
         const DESTINATION_OPTIONS = [
             { code: "SUG", name: "Surigao (SUG)" },
@@ -47,10 +56,10 @@
             { code: "LAO", name: "Laoag (LAO)" },
             { code: "KUL", name: "Kuala Lumpur (KUL)" },
             { code: "SIN", name: "Singapore (SIN)" },
-            { code: "CEB", name: "Cebu (CEB)" }
+            { code: "CEB", name: "Cebu (CEB)" },
+            { code: "MEL", name: "Melbourne (MEL)" }
         ];
 
-        const CURRENCY_OPTIONS = ["INR", "USD", "SGD", "SAR", "PHP"];
         const LANGUAGE_OPTIONS = [ { code: "en", name: "English" }, { code: "ja", name: "Japanese" }, { code: "ko", name: "Korean" }, { code: "zh", name: "Mandarin" } ];
 
         function App() {
@@ -60,15 +69,27 @@
             const [isSearched, setIsSearched] = useState(false);
             const [loadingStage, setLoadingStage] = useState("");
             const [pnr, setPnr] = useState("");
+            const [orderId, setOrderId] = useState(""); 
             const [userType, setUserType] = useState("GUEST");
             const [language, setLanguage] = useState("en");
+            
+            const [successActiveTab, setSuccessActiveTab] = useState('ticket'); 
+            
             const [apiLogs, setApiLogs] = useState(() => {
                 const saved = sessionStorage.getItem('flight_demo_logs');
                 return saved ? JSON.parse(saved) : [];
             });
 
-            // Default to MNL -> SUG (Page 1 of PDF)
             const [search, setSearch] = useState({ from: 'MNL', to: 'SUG', date: '2025-12-30', currency: 'USD' });
+
+            const getLogUrl = (type) => {
+                const id = orderId || 'PAH-1767543021004';
+                let tag = '';
+                if(type === 'fulfillment') tag = 'ORDERID_BASED_FULFILLMENT';
+                if(type === 'gateway') tag = 'outgoing_api';
+                if(type === 'webhook') tag = 'outgoing_webhook';
+                return `https://kibana-connector.sso.internal.staging.mum.juspay.net/_plugin/kibana/app/discover#/?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:now-7w,to:now))&_a=(columns:!(url),filters:!(),index:'3967a0a0-1f76-11f0-9e82-db9a8cb1e96a',interval:auto,query:(language:kuery,query:'%22${id}%22%20and%20%22${tag}%22'),sort:!())`;
+            };
 
             const logApiCall = (endpoint, method, req, res) => {
                 const newLog = { id: Date.now(), timestamp: new Date().toLocaleTimeString(), endpoint, method, request: req, response: res };
@@ -94,20 +115,39 @@
                 const params = new URLSearchParams(window.location.search);
                 if (params.get('status') === 'success') {
                     const pnrFromUrl = params.get('pnr') || "PENDING";
+                    const orderIdFromUrl = params.get('order_id');
                     setPnr(pnrFromUrl);
-                    handleSuccessChain(params.get('airline'), pnrFromUrl);
+                    setOrderId(orderIdFromUrl);
+                    handleSuccessChain(params.get('airline'), pnrFromUrl, orderIdFromUrl);
                 }
             }, []);
 
-            const handleSuccessChain = async (name, confirmedPnr) => {
+            const handleSuccessChain = async (name, confirmedPnr, currentOrderId) => {
                 const matched = Object.values(AIRLINE_CONFIGS).find(a => a.name === name);
                 setAirline(matched || AIRLINE_CONFIGS.cebu);
-                setView('airline');
+                setView('success');
                 setLoadingStage("Syncing Booking...");
+                
                 await fetch('/api/nsk/v3/booking', { method: 'POST' });
                 await fetch('/api/nsk/v5/booking/payments', { method: 'POST' });
                 await fetch('/api/nsk/v3/booking', { method: 'PUT' });
-                setView('success');
+                
+                if(currentOrderId) {
+                    setLoadingStage("Confirming Payment...");
+                    const fulfillReq = { order_id: currentOrderId, pnr: confirmedPnr };
+                    
+                    fetch('/fulfill-order', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(fulfillReq)
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        logApiCall('https://sandbox.juspay.in/orders/.../fulfillment', 'POST', fulfillReq, data);
+                    })
+                    .catch(err => console.error("Fulfillment trigger failed", err));
+                }
+                
                 setLoadingStage("");
             };
 
@@ -122,7 +162,7 @@
                 setLoadingStage("Securing Session...");
                 await fetch('/api/nsk/v4/trip/sell', { method: 'POST' });
                 const sessionReq = {
-                    amount: 2000,
+                    amount: 2000, 
                     currency: search.currency,
                     navToken,
                     airlineName: airline.name,
@@ -155,31 +195,216 @@
             );
 
             if (view === 'success') return (
-                <div className="min-h-screen flex flex-col items-center bg-slate-50 text-center animate-in pb-20 pt-16 px-4">
-                    <div className="mb-8"><div className="w-20 h-20 bg-green-500 text-white rounded-full flex items-center justify-center text-4xl shadow-xl mx-auto mb-4">✓</div><h1 className="text-3xl font-black text-slate-900 uppercase">Booking Confirmed</h1><p className="text-slate-500 font-medium">Your itinerary has been sent to your email.</p></div>
-                    <div className="w-full max-w-4xl bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row mb-16 relative">
-                        <div className="flex-1 p-8 md:p-10 text-left border-r-2 border-dashed border-slate-200 relative"><div className="flex justify-between items-center mb-8"><img src={airline?.logo} style={{height: '30px'}} /><span className="bg-slate-100 text-slate-600 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Economy</span></div><div className="flex justify-between items-end mb-8"><div><div className="text-5xl font-black text-slate-900 mb-1">{search.from}</div><div className="text-xs text-slate-400 font-bold uppercase tracking-widest">Departure</div></div><div className="mb-3 text-slate-300 text-2xl">✈</div><div className="text-right"><div className="text-5xl font-black text-slate-900 mb-1">{search.to}</div><div className="text-xs text-slate-400 font-bold uppercase tracking-widest">Arrival</div></div></div></div>
-                        <div className="w-full md:w-80 bg-slate-900 text-white p-8 flex flex-col items-center justify-center text-center relative"><div className="text-[10px] font-bold text-blue-400 uppercase tracking-widest mb-2">Booking Reference</div><div className="ticket-font text-5xl font-bold tracking-wider mb-8 text-white">{pnr}</div><div className="bg-white p-2 rounded-xl inline-block shadow-lg"><img src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${pnr}`} className="w-32 h-32" alt="Boarding QR" /></div></div>
+                <div className="min-h-screen flex flex-col items-center bg-slate-50 text-center animate-in">
+                    
+                    {/* Success Header */}
+                    <div className="pt-12 pb-8 px-4 w-full bg-white shadow-sm mb-6">
+                        <div className="w-16 h-16 bg-green-500 text-white rounded-full flex items-center justify-center text-3xl shadow-lg mx-auto mb-4">✓</div>
+                        <h1 className="text-3xl font-black text-slate-900 uppercase">Booking Confirmed</h1>
+                        <p className="text-slate-500 font-medium">Thank you for flying with us.</p>
+                        
+                        <div className="flex justify-center mt-8 gap-8 border-b border-slate-200 max-w-4xl mx-auto">
+                            <button 
+                                onClick={() => setSuccessActiveTab('ticket')}
+                                className={`pb-3 px-4 text-sm font-bold uppercase tracking-widest transition-all ${successActiveTab === 'ticket' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-slate-400 hover:text-slate-600'}`}
+                            >
+                                Ticket Details
+                            </button>
+                            <button 
+                                onClick={() => setSuccessActiveTab('logs')}
+                                className={`pb-3 px-4 text-sm font-bold uppercase tracking-widest transition-all ${successActiveTab === 'logs' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-slate-400 hover:text-slate-600'}`}
+                            >
+                                All Logs
+                            </button>
+                        </div>
                     </div>
-                    <div className="w-full max-w-4xl px-2 text-left"><h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Transaction API Logs</h3><div className="bg-[#1e1e1e] rounded-xl overflow-hidden shadow-2xl log-container border border-slate-800"><div className="p-4 overflow-y-auto max-h-[400px] text-xs space-y-6">{apiLogs.map((log, index) => (<div key={log.id} className="log-entry pl-4 animate-in" style={{animationDelay: `${index * 100}ms`}}><div className="flex items-center gap-3 mb-2"><span className="text-slate-500">[{log.timestamp}]</span><span className={`font-bold px-2 py-0.5 rounded ${log.method === 'POST' ? 'bg-blue-900 text-blue-300' : 'bg-orange-900 text-orange-300'}`}>{log.method}</span><span className="text-green-400 font-mono">{log.endpoint}</span></div><div className="grid grid-cols-2 gap-4"><div><div className="text-slate-500 mb-1 uppercase text-[10px]">Request Payload</div><pre className="text-slate-300 bg-black/30 p-2 rounded overflow-x-auto border border-white/5">{JSON.stringify(log.request, null, 2)}</pre></div><div><div className="text-slate-500 mb-1 uppercase text-[10px]">Response Data</div><pre className="text-blue-200 bg-blue-900/10 p-2 rounded overflow-x-auto border border-blue-500/20">{JSON.stringify(log.response, null, 2)}</pre></div></div></div>))}</div></div></div>
+
+                    <div className="w-full max-w-6xl px-4 pb-20">
+                        {successActiveTab === 'ticket' && (
+                            <div className="animate-in">
+                                <div className="w-full max-w-4xl mx-auto bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row relative">
+                                    <div className="flex-1 p-8 md:p-10 text-left border-r-2 border-dashed border-slate-200 relative">
+                                        <div className="flex justify-between items-center mb-8">
+                                            <img src={airline?.logo} style={{height: '30px'}} />
+                                            <span className="bg-slate-100 text-slate-600 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Economy</span>
+                                        </div>
+                                        <div className="flex justify-between items-end mb-8">
+                                            <div>
+                                                <div className="text-5xl font-black text-slate-900 mb-1">{search.from}</div>
+                                                <div className="text-xs text-slate-400 font-bold uppercase tracking-widest">Departure</div>
+                                            </div>
+                                            <div className="mb-3 text-slate-300 text-2xl">✈</div>
+                                            <div className="text-right">
+                                                <div className="text-5xl font-black text-slate-900 mb-1">{search.to}</div>
+                                                <div className="text-xs text-slate-400 font-bold uppercase tracking-widest">Arrival</div>
+                                            </div>
+                                        </div>
+                                        <div className="grid grid-cols-2 gap-8 pt-6 border-t border-slate-100">
+                                            <div>
+                                                <div className="text-xs text-slate-400 font-bold uppercase tracking-widest mb-1">Date</div>
+                                                <div className="font-bold text-slate-800">{new Date(search.date).toDateString()}</div>
+                                            </div>
+                                            <div className="text-right">
+                                                <div className="text-xs text-slate-400 font-bold uppercase tracking-widest mb-1">Payment ID</div>
+                                                <div className="font-bold text-slate-800">{orderId || "PENDING"}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="w-full md:w-80 bg-slate-900 text-white p-8 flex flex-col items-center justify-center text-center relative">
+                                        <div className="text-[10px] font-bold text-blue-400 uppercase tracking-widest mb-2">Booking Reference</div>
+                                        <div className="ticket-font text-5xl font-bold tracking-wider mb-8 text-white">{pnr}</div>
+                                        <div className="bg-white p-2 rounded-xl inline-block shadow-lg">
+                                            <img src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${pnr}`} className="w-32 h-32" alt="Boarding QR" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {successActiveTab === 'logs' && (
+                            <div className="animate-in w-full text-left">
+                                <div className="bg-[#1e1e1e] rounded-xl overflow-hidden shadow-2xl log-container border border-slate-800 flex flex-col h-[85vh]">
+                                    
+                                    {/* --- REDESIGNED LOGS HEADER --- */}
+                                    <div className="bg-[#1e1e1e] px-6 py-6 border-b border-white/5 shrink-0">
+                                        <div className="flex items-center justify-between mb-5">
+                                            <div className="flex items-center gap-3">
+                                                <div className="flex gap-1.5">
+                                                    <div className="w-2.5 h-2.5 rounded-full bg-red-500"></div>
+                                                    <div className="w-2.5 h-2.5 rounded-full bg-yellow-500"></div>
+                                                    <div className="w-2.5 h-2.5 rounded-full bg-green-500"></div>
+                                                </div>
+                                                <span className="text-xs text-slate-400 font-mono tracking-wide ml-2">Server Logs & Kibana</span>
+                                            </div>
+                                            <div className="text-[10px] text-slate-500 font-mono bg-black/30 px-3 py-1 rounded-full border border-white/5">
+                                                ID: <span className="text-blue-400">{orderId || 'Waiting...'}</span>
+                                            </div>
+                                        </div>
+
+                                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                            
+                                            {/* Card 1: Fulfillment */}
+                                            <a href={getLogUrl('fulfillment')} target="_blank" className="block p-6 bg-slate-800 border border-slate-700 rounded-xl hover:border-blue-500 hover:shadow-lg hover:shadow-blue-500/10 transition-all group relative overflow-hidden">
+                                                <div className="absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity">
+                                                    <span className="text-6xl">📦</span>
+                                                </div>
+                                                <div className="relative z-10">
+                                                    <div className="flex items-center gap-3 mb-3">
+                                                        <div className="p-2 bg-blue-500/20 rounded-lg text-blue-400">
+                                                            <div className="text-xl">📦</div>
+                                                        </div>
+                                                        <h3 className="font-bold text-white text-lg">Fulfillment Logs</h3>
+                                                    </div>
+                                                    <p className="text-slate-400 text-sm mb-4">View server-side fulfillment status & history</p>
+                                                    <div className="inline-flex items-center gap-2 text-xs font-bold text-blue-400 uppercase tracking-wider bg-blue-500/10 px-3 py-1.5 rounded-full group-hover:bg-blue-500 group-hover:text-white transition-colors">
+                                                        <span>Open in Kibana</span>
+                                                        <span>→</span>
+                                                    </div>
+                                                </div>
+                                            </a>
+
+                                            {/* Card 2: Gateway */}
+                                            <a href={getLogUrl('gateway')} target="_blank" className="block p-6 bg-slate-800 border border-slate-700 rounded-xl hover:border-blue-500 hover:shadow-lg hover:shadow-blue-500/10 transition-all group relative overflow-hidden">
+                                                <div className="absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity">
+                                                    <span className="text-6xl">🌐</span>
+                                                </div>
+                                                <div className="relative z-10">
+                                                    <div className="flex items-center gap-3 mb-3">
+                                                        <div className="p-2 bg-purple-500/20 rounded-lg text-purple-400">
+                                                            <div className="text-xl">🌐</div>
+                                                        </div>
+                                                        <h3 className="font-bold text-white text-lg">Gateway Outgoing</h3>
+                                                    </div>
+                                                    <p className="text-slate-400 text-sm mb-4">Inspect outgoing API calls to Payment Gateway</p>
+                                                    <div className="inline-flex items-center gap-2 text-xs font-bold text-purple-400 uppercase tracking-wider bg-purple-500/10 px-3 py-1.5 rounded-full group-hover:bg-purple-500 group-hover:text-white transition-colors">
+                                                        <span>Open in Kibana</span>
+                                                        <span>→</span>
+                                                    </div>
+                                                </div>
+                                            </a>
+
+                                            {/* Card 3: Webhooks */}
+                                            <a href={getLogUrl('webhook')} target="_blank" className="block p-6 bg-slate-800 border border-slate-700 rounded-xl hover:border-blue-500 hover:shadow-lg hover:shadow-blue-500/10 transition-all group relative overflow-hidden">
+                                                <div className="absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity">
+                                                    <span className="text-6xl">⚡</span>
+                                                </div>
+                                                <div className="relative z-10">
+                                                    <div className="flex items-center gap-3 mb-3">
+                                                        <div className="p-2 bg-orange-500/20 rounded-lg text-orange-400">
+                                                            <div className="text-xl">⚡</div>
+                                                        </div>
+                                                        <h3 className="font-bold text-white text-lg">Webhook Logs</h3>
+                                                    </div>
+                                                    <p className="text-slate-400 text-sm mb-4">Track server-to-server webhook notifications</p>
+                                                    <div className="inline-flex items-center gap-2 text-xs font-bold text-orange-400 uppercase tracking-wider bg-orange-500/10 px-3 py-1.5 rounded-full group-hover:bg-orange-500 group-hover:text-white transition-colors">
+                                                        <span>Open in Kibana</span>
+                                                        <span>→</span>
+                                                    </div>
+                                                </div>
+                                            </a>
+
+                                        </div>
+                                    </div>
+
+                                    {/* Client Logs Section */}
+                                    <div className="bg-[#252526] px-4 py-2 border-b border-white/5 text-[10px] text-slate-400 uppercase font-bold tracking-widest shrink-0">
+                                        Client Side Events
+                                    </div>
+                                    <div className="p-0 overflow-y-auto flex-1 custom-scroll bg-[#1e1e1e]">
+                                        {apiLogs.length === 0 ? (
+                                            <div className="p-8 text-slate-600 italic text-center text-sm">No Client API logs recorded for this session.</div>
+                                        ) : (
+                                            apiLogs.map((log, index) => (
+                                                <div key={log.id} className={`log-entry border-b border-white/5 p-4 ${index % 2 === 0 ? 'bg-transparent' : 'bg-white/[0.02]'}`}>
+                                                    <div className="flex items-center gap-3 mb-3">
+                                                        <span className="text-slate-500 text-[10px] font-mono">[{log.timestamp}]</span>
+                                                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${log.method === 'POST' ? 'bg-blue-500/10 text-blue-400 border border-blue-500/20' : 'bg-orange-500/10 text-orange-400 border border-orange-500/20'}`}>
+                                                            {log.method}
+                                                        </span>
+                                                        <span className="text-green-400 font-mono text-xs">{log.endpoint}</span>
+                                                    </div>
+                                                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 pl-4">
+                                                        <div>
+                                                            <div className="text-slate-500 mb-1 uppercase text-[9px] tracking-wider font-bold">Payload</div>
+                                                            <pre className="text-[10px] text-slate-300 bg-black/30 p-3 rounded-md overflow-x-auto border border-white/5 font-mono leading-relaxed">{JSON.stringify(log.request, null, 2)}</pre>
+                                                        </div>
+                                                        <div>
+                                                            <div className="text-slate-500 mb-1 uppercase text-[9px] tracking-wider font-bold">Response</div>
+                                                            <pre className="text-[10px] text-blue-200 bg-blue-900/10 p-3 rounded-md overflow-x-auto border border-blue-500/10 font-mono leading-relaxed">{JSON.stringify(log.response, null, 2)}</pre>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            ))
+                                        )}
+                                        <div className="h-4"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                    </div>
                 </div>
             );
 
             return (
                 <div className={`min-h-screen ${airline.id === 'vueling' ? 'vueling-dots font-["Ubuntu"]' : 'bg-[#f4f7f9]'} animate-in`}>
-                    <header className="px-10 py-6 flex items-center justify-between bg-white border-b sticky top-0 z-50 shadow-sm" style={airline.id === 'cebu' ? {borderBottom: `4px solid ${airline.accent}`, backgroundColor: airline.primary} : {}}>
-                        <img src={airline.logo} style={{ height: airline.logoH }} className="cursor-pointer" onClick={() => window.location.reload()} />
-                        <div className="flex items-center gap-4">
-                            {loadingStage && <span className="text-[10px] font-bold text-blue-600 animate-pulse uppercase tracking-widest">{loadingStage}</span>}
-                            <div className="font-bold text-sm text-black">{userType === 'GUEST' ? '👤 Guest' : (userType === 'AGENT' ? '💼 Agent' : '🎖 Member')}</div>
+                    {airline.id === 'cebu' ? (
+                        <div className="w-full bg-white relative z-50">
+                            <img src="./cebu-header.png" className="w-full h-auto object-cover" alt="Cebu Header" onClick={() => window.location.reload()} />
                         </div>
-                    </header>
+                    ) : (
+                        <header className="px-10 py-6 flex items-center justify-between bg-white border-b sticky top-0 z-50 shadow-sm" style={{borderBottom: `4px solid ${airline.accent}`, backgroundColor: airline.primary}}>
+                            <img src={airline.logo} style={{ height: airline.logoH }} className="cursor-pointer" onClick={() => window.location.reload()} />
+                            <div className="flex items-center gap-4">
+                                <div className="font-bold text-sm text-black">👤 Guest</div>
+                            </div>
+                        </header>
+                    )}
 
                     <div className={`${airline.hero} py-24 flex flex-col items-center`}>
                         {airline.id === 'cebu' && <h1 className="text-8xl font-black italic text-white mb-10 drop-shadow-2xl uppercase tracking-tighter">TRAVEL NOW</h1>}
                         <div className={airline.id === 'vueling' ? "vueling-pill w-full max-w-7xl flex p-2 mt-20" : "bg-white p-10 rounded-[2rem] shadow-2xl w-full max-w-7xl mt-10"}>
                             <div className="flex flex-col gap-4 w-full text-black">
-                                <div className="grid grid-cols-1 md:grid-cols-7 gap-4 items-end">
+                                <div className="grid grid-cols-1 md:grid-cols-5 gap-4 items-end">
                                     <div className="px-4 border-r border-slate-100">
                                         <label className="text-[10px] font-bold text-gray-400 block mb-1">FROM</label>
                                         <select className="font-bold w-full focus:outline-none bg-transparent" value={search.from} onChange={(e) => setSearch({...search, from: e.target.value})}>
@@ -195,20 +420,6 @@
                                     <div className="px-4 border-r border-slate-100">
                                         <label className="text-[10px] font-bold text-gray-400 block mb-1">DATE</label>
                                         <input type="date" className="font-bold w-full focus:outline-none bg-transparent text-sm" value={search.date} onChange={(e) => setSearch({...search, date: e.target.value})} />
-                                    </div>
-                                    <div className="px-4 border-r border-slate-100">
-                                        <label className="text-[10px] font-bold text-gray-400 block mb-1">USER TYPE</label>
-                                        <select className="font-bold w-full focus:outline-none bg-transparent" value={userType} onChange={(e) => setUserType(e.target.value)}>
-                                            <option value="GUEST">Guest</option>
-                                            <option value="MEMBER">Member</option>
-                                            <option value="AGENT">Agent</option>
-                                        </select>
-                                    </div>
-                                    <div className="px-4 border-r border-slate-100">
-                                        <label className="text-[10px] font-bold text-gray-400 block mb-1">CURRENCY</label>
-                                        <select className="font-bold w-full focus:outline-none bg-transparent" value={search.currency} onChange={(e) => setSearch({...search, currency: e.target.value})}>
-                                            {CURRENCY_OPTIONS.map(curr => <option key={curr} value={curr}>{curr}</option>)}
-                                        </select>
                                     </div>
                                     <div className="px-4 border-r border-slate-100">
                                         <label className="text-[10px] font-bold text-gray-400 block mb-1">LANGUAGE</label>
@@ -230,17 +441,19 @@
                                     <div className="text-slate-400 text-xs mt-2 font-bold uppercase tracking-widest">{new Date(search.date).toDateString()} | Non-Stop</div>
                                 </div>
                                 <div className="text-right">
-                                    <div className="text-5xl font-black mb-6 tracking-tighter italic">{search.currency === 'INR' ? '₹' : search.currency} {
-                                        // Dynamic display logic based on PDF routes
-                                        (search.from === 'MNL' && search.to === 'SUG') ? '13,949' :
-                                        (search.from === 'SIN' && search.to === 'MNL') ? '64,064' :
-                                        (search.from === 'MNL' && search.to === 'LAO') ? '13,947' :
-                                        (search.from === 'MNL' && search.to === 'KUL') ? '45,974' :
-                                        (search.from === 'MNL' && search.to === 'SIN') ? '59,640' :
-                                        (search.from === 'RUH' && search.to === 'MNL') ? '59,640' :
-                                        (search.from === 'MEL' && search.to === 'CEB') ? '76,761' :
-                                        '2,000'
-                                    }</div>
+                                    <div className="text-5xl font-black mb-6 tracking-tighter italic">
+                                        {(search.from === 'MNL' && search.to === 'SUG') ? '$190' :
+                                        (search.from === 'SIN' && search.to === 'MNL') ? '₱64,064' :
+                                        (search.from === 'MNL' && search.to === 'LAO') ? '₹13,947' :
+                                        (search.from === 'MNL' && search.to === 'KUL') ? '$45,974' :
+                                        (search.from === 'MNL' && search.to === 'SIN') ? 'S$59,640' :
+                                        (search.from === 'RUH' && search.to === 'MNL') ? '₹59,640' :
+                                        (search.from === 'MEL' && search.to === 'CEB') ? '₱76,761' :
+                                        (search.from === 'ENI' && search.to === 'MNL') ? '₱6,000' :
+                                        (search.from === 'PVG' && search.to === 'MEL') ? '$2,500' :
+                                        (search.from === 'CEB' && search.to === 'MNL') ? '₫18,000' :
+                                        '$2,000'}
+                                    </div>
                                     <button onClick={handlePay} className={`px-16 py-4 uppercase font-black shadow-2xl transition-all hover:scale-105 ${airline.btnStyle}`} style={{ backgroundColor: airline.id === 'cebu' ? '#FFF000' : '#ffdb00', color: '#000' }}>SELECT & PAY</button>
                                 </div>
                             </div>
