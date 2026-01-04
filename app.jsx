@@ -55,7 +55,7 @@ export default function App() {
                 <button 
                   onClick={async () => {
                     setLoading(true);
-                    const res = await fetch('http://localhost:3001/create-session', {
+                    const res = await fetch('/create-session', {
                       method: 'POST',
                       headers: {'Content-Type': 'application/json'},
                       body: JSON.stringify({ amount: f.price, airlineName: airline.name })

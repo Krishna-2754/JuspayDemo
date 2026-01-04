@@ -140,4 +140,4 @@ app.post('/api/payment/eligibility', (req, res) => {
     res.json([]); // Simplified for brevity as logic didn't change
 });
 
-app.listen(3001, () => console.log('🚀 Server running on http://localhost:3001'));
+app.listen(3001, () => console.log('🚀 Server running on '));
