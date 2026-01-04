@@ -11,7 +11,7 @@ app.use(cors());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Basic Auth (Placeholder)
-const JUSPAY_AUTH = 'Basic dummy';
+const JUSPAY_AUTH = process.env.JUSPAY_AUTH || 'Basic dummy';
 
 const generatePNR = () => Math.random().toString(36).substring(2, 8).toUpperCase();
 
