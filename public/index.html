@@ -108,7 +108,7 @@
                 setAirline(config);
                 setView('airline');
                 setLoadingStage("Authenticating...");
-                fetch('http://localhost:3001/api/nsk/v2/token', { method: 'POST', headers: { 'Content-Type': 'application/json' } })
+                fetch('/api/nsk/v2/token', { method: 'POST', headers: { 'Content-Type': 'application/json' } })
                 .then(res => res.json())
                 .then(data => { logApiCall('/api/nsk/v2/token', 'POST', {}, data); setNavToken(data.data.token); setLoadingStage(""); });
             };
@@ -130,15 +130,15 @@
                 setView('success');
                 setLoadingStage("Syncing Booking...");
                 
-                await fetch('http://localhost:3001/api/nsk/v3/booking', { method: 'POST' });
-                await fetch('http://localhost:3001/api/nsk/v5/booking/payments', { method: 'POST' });
-                await fetch('http://localhost:3001/api/nsk/v3/booking', { method: 'PUT' });
+                await fetch('/api/nsk/v3/booking', { method: 'POST' });
+                await fetch('/api/nsk/v5/booking/payments', { method: 'POST' });
+                await fetch('/api/nsk/v3/booking', { method: 'PUT' });
                 
                 if(currentOrderId) {
                     setLoadingStage("Confirming Payment...");
                     const fulfillReq = { order_id: currentOrderId, pnr: confirmedPnr };
                     
-                    fetch('http://localhost:3001/fulfill-order', {
+                    fetch('/fulfill-order', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(fulfillReq)
@@ -155,14 +155,14 @@
 
             const handleSearch = async () => {
                 setLoadingStage("Searching...");
-                await fetch('http://localhost:3001/api/nsk/v4/availability/search/simple', { method: 'POST' });
+                await fetch('/api/nsk/v4/availability/search/simple', { method: 'POST' });
                 setIsSearched(true);
                 setLoadingStage("");
             };
 
             const handlePay = async () => {
                 setLoadingStage("Securing Session...");
-                await fetch('http://localhost:3001/api/nsk/v4/trip/sell', { method: 'POST' });
+                await fetch('/api/nsk/v4/trip/sell', { method: 'POST' });
                 
                 const sessionReq = {
                     category: category, 
@@ -173,7 +173,7 @@
                     language: language
                 };
                 
-                const res = await fetch('http://localhost:3001/create-session', {
+                const res = await fetch('/create-session', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(sessionReq)
