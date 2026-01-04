@@ -203,7 +203,7 @@ const PAYMENT_RULES_SIN_MNL = {
   }
 };
 
-const ROUTES = {
+const FLIGHT_ROUTES = {
   "MNL_SUG": { amount: "190", currency: "USD", mti: MTI_MNL_SUG, udf10: "NEW_Ios", paymentFilter: SHARED_PAYMENT_FILTER_MNL_SUG, addOnRules: SHARED_ADD_ON_RULES , integrity: true},
   "SIN_MNL": { amount: "9500", currency: "PHP", mti: MTI_SIN_MNL, udf10: "NEW_Ios", paymentFilter: SHARED_PAYMENT_FILTER_MNL_SUG, addOnRules: [], riskProvider: "JUSPAYFRM", capCustId: "000014464",integrity: true },
   "MNL_LAO": { amount: "110", currency: "SGD", mti: MTI_MNL_LAO, udf10: "NEW_Ios", paymentFilter: SHARED_PAYMENT_FILTER_MNL_LAO, addOnRules: [] , paymentRules: PAYMENT_RULES_SIN_MNL, integrity: true},
