@@ -19,11 +19,6 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
         .ticket-font { font-family: 'Space Mono', monospace; }
         
-        /* Log Console Styling */
-        .log-container { font-family: 'Monaco', 'Consolas', monospace; }
-        .log-entry { border-left: 2px solid #444; transition: all 0.2s; }
-        .log-entry:hover { border-left-color: #00AEEF; background: rgba(255,255,255,0.05); }
-        
         /* Custom Scrollbar */
         .custom-scroll::-webkit-scrollbar { width: 8px; height: 8px; }
         .custom-scroll::-webkit-scrollbar-track { background: #1e1e1e; }
@@ -60,6 +55,12 @@
             { code: "MEL", name: "Melbourne (MEL)" }
         ];
 
+        const HOTEL_OPTIONS = [
+            { id: "SAVOY", name: "Savoy Hotel Manila" },
+            { id: "MARRIOTT", name: "Manila Marriott Hotel" },
+            { id: "MILLENIUM", name: "Citadines Millennium Ortigas" }
+        ];
+
         const LANGUAGE_OPTIONS = [ { code: "en", name: "English" }, { code: "ja", name: "Japanese" }, { code: "ko", name: "Korean" }, { code: "zh", name: "Mandarin" } ];
 
         function App() {
@@ -70,11 +71,12 @@
             const [loadingStage, setLoadingStage] = useState("");
             const [pnr, setPnr] = useState("");
             const [orderId, setOrderId] = useState(""); 
-            const [userType, setUserType] = useState("GUEST");
             const [language, setLanguage] = useState("en");
             
-            const [successActiveTab, setSuccessActiveTab] = useState('ticket'); 
+            const [category, setCategory] = useState('flight'); // 'flight' | 'hotel'
+            const [selectedHotel, setSelectedHotel] = useState("SAVOY");
             
+            const [successActiveTab, setSuccessActiveTab] = useState('ticket'); 
             const [apiLogs, setApiLogs] = useState(() => {
                 const saved = sessionStorage.getItem('flight_demo_logs');
                 return saved ? JSON.parse(saved) : [];
@@ -106,7 +108,7 @@
                 setAirline(config);
                 setView('airline');
                 setLoadingStage("Authenticating...");
-                fetch('/api/nsk/v2/token', { method: 'POST', headers: { 'Content-Type': 'application/json' } })
+                fetch('http://localhost:3001/api/nsk/v2/token', { method: 'POST', headers: { 'Content-Type': 'application/json' } })
                 .then(res => res.json())
                 .then(data => { logApiCall('/api/nsk/v2/token', 'POST', {}, data); setNavToken(data.data.token); setLoadingStage(""); });
             };
@@ -128,15 +130,15 @@
                 setView('success');
                 setLoadingStage("Syncing Booking...");
                 
-                await fetch('/api/nsk/v3/booking', { method: 'POST' });
-                await fetch('/api/nsk/v5/booking/payments', { method: 'POST' });
-                await fetch('/api/nsk/v3/booking', { method: 'PUT' });
+                await fetch('http://localhost:3001/api/nsk/v3/booking', { method: 'POST' });
+                await fetch('http://localhost:3001/api/nsk/v5/booking/payments', { method: 'POST' });
+                await fetch('http://localhost:3001/api/nsk/v3/booking', { method: 'PUT' });
                 
                 if(currentOrderId) {
                     setLoadingStage("Confirming Payment...");
                     const fulfillReq = { order_id: currentOrderId, pnr: confirmedPnr };
                     
-                    fetch('/fulfill-order', {
+                    fetch('http://localhost:3001/fulfill-order', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(fulfillReq)
@@ -153,24 +155,25 @@
 
             const handleSearch = async () => {
                 setLoadingStage("Searching...");
-                await fetch('/api/nsk/v4/availability/search/simple', { method: 'POST' });
+                await fetch('http://localhost:3001/api/nsk/v4/availability/search/simple', { method: 'POST' });
                 setIsSearched(true);
                 setLoadingStage("");
             };
 
             const handlePay = async () => {
                 setLoadingStage("Securing Session...");
-                await fetch('/api/nsk/v4/trip/sell', { method: 'POST' });
+                await fetch('http://localhost:3001/api/nsk/v4/trip/sell', { method: 'POST' });
+                
                 const sessionReq = {
-                    amount: 2000, 
-                    currency: search.currency,
+                    category: category, 
+                    hotelId: selectedHotel,
                     navToken,
                     airlineName: airline.name,
                     searchData: search,
-                    userType: userType,
                     language: language
                 };
-                const res = await fetch('/create-session', {
+                
+                const res = await fetch('http://localhost:3001/create-session', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(sessionReq)
@@ -178,6 +181,25 @@
                 const data = await res.json();
                 logApiCall('https://sandbox.juspay.in/session', 'POST', data.sentPayload, { payment_link: data.url });
                 window.location.href = data.url;
+            };
+
+            const getDisplayPrice = () => {
+                if (category === 'hotel') {
+                    if (selectedHotel === 'SAVOY') return '฿ 1,440';
+                    if (selectedHotel === 'MARRIOTT') return '₱ 34,639';
+                    if (selectedHotel === 'MILLENIUM') return '₱ 67,498';
+                }
+                if (search.from === 'MNL' && search.to === 'SUG') return '$190';
+                if (search.from === 'SIN' && search.to === 'MNL') return '₱64,064';
+                if (search.from === 'MNL' && search.to === 'LAO') return 'S$110';
+                if (search.from === 'MNL' && search.to === 'KUL') return '$225';
+                if (search.from === 'MNL' && search.to === 'SIN') return 'S$340';
+                if (search.from === 'RUH' && search.to === 'MNL') return '₹27,000';
+                if (search.from === 'MEL' && search.to === 'CEB') return '₱14,225';
+                if (search.from === 'ENI' && search.to === 'MNL') return '₱6,000';
+                if (search.from === 'PVG' && search.to === 'MEL') return '$2,500';
+                if (search.from === 'CEB' && search.to === 'MNL') return '₫18,000';
+                return '$2,000';
             };
 
             if (view === 'launcher') return (
@@ -196,26 +218,13 @@
 
             if (view === 'success') return (
                 <div className="min-h-screen flex flex-col items-center bg-slate-50 text-center animate-in">
-                    
-                    {/* Success Header */}
                     <div className="pt-12 pb-8 px-4 w-full bg-white shadow-sm mb-6">
                         <div className="w-16 h-16 bg-green-500 text-white rounded-full flex items-center justify-center text-3xl shadow-lg mx-auto mb-4">✓</div>
                         <h1 className="text-3xl font-black text-slate-900 uppercase">Booking Confirmed</h1>
                         <p className="text-slate-500 font-medium">Thank you for flying with us.</p>
-                        
                         <div className="flex justify-center mt-8 gap-8 border-b border-slate-200 max-w-4xl mx-auto">
-                            <button 
-                                onClick={() => setSuccessActiveTab('ticket')}
-                                className={`pb-3 px-4 text-sm font-bold uppercase tracking-widest transition-all ${successActiveTab === 'ticket' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-slate-400 hover:text-slate-600'}`}
-                            >
-                                Ticket Details
-                            </button>
-                            <button 
-                                onClick={() => setSuccessActiveTab('logs')}
-                                className={`pb-3 px-4 text-sm font-bold uppercase tracking-widest transition-all ${successActiveTab === 'logs' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-slate-400 hover:text-slate-600'}`}
-                            >
-                                All Logs
-                            </button>
+                            <button onClick={() => setSuccessActiveTab('ticket')} className={`pb-3 px-4 text-sm font-bold uppercase tracking-widest transition-all ${successActiveTab === 'ticket' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-slate-400 hover:text-slate-600'}`}>Ticket Details</button>
+                            <button onClick={() => setSuccessActiveTab('logs')} className={`pb-3 px-4 text-sm font-bold uppercase tracking-widest transition-all ${successActiveTab === 'logs' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-slate-400 hover:text-slate-600'}`}>All Logs</button>
                         </div>
                     </div>
 
@@ -264,8 +273,6 @@
                         {successActiveTab === 'logs' && (
                             <div className="animate-in w-full text-left">
                                 <div className="bg-[#1e1e1e] rounded-xl overflow-hidden shadow-2xl log-container border border-slate-800 flex flex-col h-[85vh]">
-                                    
-                                    {/* --- REDESIGNED LOGS HEADER --- */}
                                     <div className="bg-[#1e1e1e] px-6 py-6 border-b border-white/5 shrink-0">
                                         <div className="flex items-center justify-between mb-5">
                                             <div className="flex items-center gap-3">
@@ -280,73 +287,55 @@
                                                 ID: <span className="text-blue-400">{orderId || 'Waiting...'}</span>
                                             </div>
                                         </div>
-
                                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                             
-                                            {/* Card 1: Fulfillment */}
-                                            <a href={getLogUrl('fulfillment')} target="_blank" className="block p-6 bg-slate-800 border border-slate-700 rounded-xl hover:border-blue-500 hover:shadow-lg hover:shadow-blue-500/10 transition-all group relative overflow-hidden">
-                                                <div className="absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity">
-                                                    <span className="text-6xl">📦</span>
+                                            {/* FULFILLMENT CARD */}
+                                            <a href={getLogUrl('fulfillment')} target="_blank" className="block bg-slate-800 border border-slate-700 rounded-xl p-6 hover:bg-slate-700 hover:border-blue-500 hover:shadow-lg transition-all duration-200 group">
+                                                <div className="flex items-start gap-4">
+                                                    <div className="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center text-xl text-blue-400">📦</div>
+                                                    <div className="flex-1">
+                                                        <h3 className="text-white font-bold text-sm mb-1 group-hover:text-blue-400 transition-colors">Fulfillment Logs</h3>
+                                                        <p className="text-slate-400 text-xs leading-relaxed">Check server-side PNR status and fulfillment history.</p>
+                                                    </div>
                                                 </div>
-                                                <div className="relative z-10">
-                                                    <div className="flex items-center gap-3 mb-3">
-                                                        <div className="p-2 bg-blue-500/20 rounded-lg text-blue-400">
-                                                            <div className="text-xl">📦</div>
-                                                        </div>
-                                                        <h3 className="font-bold text-white text-lg">Fulfillment Logs</h3>
-                                                    </div>
-                                                    <p className="text-slate-400 text-sm mb-4">View server-side fulfillment status & history</p>
-                                                    <div className="inline-flex items-center gap-2 text-xs font-bold text-blue-400 uppercase tracking-wider bg-blue-500/10 px-3 py-1.5 rounded-full group-hover:bg-blue-500 group-hover:text-white transition-colors">
-                                                        <span>Open in Kibana</span>
-                                                        <span>→</span>
-                                                    </div>
+                                                <div className="mt-4 pt-4 border-t border-white/5 flex justify-between items-center text-[10px] font-bold uppercase tracking-widest text-blue-400 opacity-80 group-hover:opacity-100">
+                                                    <span>Explore Data</span>
+                                                    <span>→</span>
                                                 </div>
                                             </a>
 
-                                            {/* Card 2: Gateway */}
-                                            <a href={getLogUrl('gateway')} target="_blank" className="block p-6 bg-slate-800 border border-slate-700 rounded-xl hover:border-blue-500 hover:shadow-lg hover:shadow-blue-500/10 transition-all group relative overflow-hidden">
-                                                <div className="absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity">
-                                                    <span className="text-6xl">🌐</span>
+                                            {/* GATEWAY CARD */}
+                                            <a href={getLogUrl('gateway')} target="_blank" className="block bg-slate-800 border border-slate-700 rounded-xl p-6 hover:bg-slate-700 hover:border-purple-500 hover:shadow-lg transition-all duration-200 group">
+                                                <div className="flex items-start gap-4">
+                                                    <div className="w-10 h-10 rounded-lg bg-purple-500/20 flex items-center justify-center text-xl text-purple-400">🌐</div>
+                                                    <div className="flex-1">
+                                                        <h3 className="text-white font-bold text-sm mb-1 group-hover:text-purple-400 transition-colors">Gateway Traffic</h3>
+                                                        <p className="text-slate-400 text-xs leading-relaxed">Inspect raw outgoing API requests to Payment Gateways.</p>
+                                                    </div>
                                                 </div>
-                                                <div className="relative z-10">
-                                                    <div className="flex items-center gap-3 mb-3">
-                                                        <div className="p-2 bg-purple-500/20 rounded-lg text-purple-400">
-                                                            <div className="text-xl">🌐</div>
-                                                        </div>
-                                                        <h3 className="font-bold text-white text-lg">Gateway Outgoing</h3>
-                                                    </div>
-                                                    <p className="text-slate-400 text-sm mb-4">Inspect outgoing API calls to Payment Gateway</p>
-                                                    <div className="inline-flex items-center gap-2 text-xs font-bold text-purple-400 uppercase tracking-wider bg-purple-500/10 px-3 py-1.5 rounded-full group-hover:bg-purple-500 group-hover:text-white transition-colors">
-                                                        <span>Open in Kibana</span>
-                                                        <span>→</span>
-                                                    </div>
+                                                <div className="mt-4 pt-4 border-t border-white/5 flex justify-between items-center text-[10px] font-bold uppercase tracking-widest text-purple-400 opacity-80 group-hover:opacity-100">
+                                                    <span>Inspect Traffic</span>
+                                                    <span>→</span>
                                                 </div>
                                             </a>
 
-                                            {/* Card 3: Webhooks */}
-                                            <a href={getLogUrl('webhook')} target="_blank" className="block p-6 bg-slate-800 border border-slate-700 rounded-xl hover:border-blue-500 hover:shadow-lg hover:shadow-blue-500/10 transition-all group relative overflow-hidden">
-                                                <div className="absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity">
-                                                    <span className="text-6xl">⚡</span>
+                                            {/* WEBHOOK CARD */}
+                                            <a href={getLogUrl('webhook')} target="_blank" className="block bg-slate-800 border border-slate-700 rounded-xl p-6 hover:bg-slate-700 hover:border-orange-500 hover:shadow-lg transition-all duration-200 group">
+                                                <div className="flex items-start gap-4">
+                                                    <div className="w-10 h-10 rounded-lg bg-orange-500/20 flex items-center justify-center text-xl text-orange-400">⚡</div>
+                                                    <div className="flex-1">
+                                                        <h3 className="text-white font-bold text-sm mb-1 group-hover:text-orange-400 transition-colors">Webhook Logs</h3>
+                                                        <p className="text-slate-400 text-xs leading-relaxed">Track server-to-server webhook notifications sent.</p>
+                                                    </div>
                                                 </div>
-                                                <div className="relative z-10">
-                                                    <div className="flex items-center gap-3 mb-3">
-                                                        <div className="p-2 bg-orange-500/20 rounded-lg text-orange-400">
-                                                            <div className="text-xl">⚡</div>
-                                                        </div>
-                                                        <h3 className="font-bold text-white text-lg">Webhook Logs</h3>
-                                                    </div>
-                                                    <p className="text-slate-400 text-sm mb-4">Track server-to-server webhook notifications</p>
-                                                    <div className="inline-flex items-center gap-2 text-xs font-bold text-orange-400 uppercase tracking-wider bg-orange-500/10 px-3 py-1.5 rounded-full group-hover:bg-orange-500 group-hover:text-white transition-colors">
-                                                        <span>Open in Kibana</span>
-                                                        <span>→</span>
-                                                    </div>
+                                                <div className="mt-4 pt-4 border-t border-white/5 flex justify-between items-center text-[10px] font-bold uppercase tracking-widest text-orange-400 opacity-80 group-hover:opacity-100">
+                                                    <span>View Events</span>
+                                                    <span>→</span>
                                                 </div>
                                             </a>
 
                                         </div>
                                     </div>
-
-                                    {/* Client Logs Section */}
                                     <div className="bg-[#252526] px-4 py-2 border-b border-white/5 text-[10px] text-slate-400 uppercase font-bold tracking-widest shrink-0">
                                         Client Side Events
                                     </div>
@@ -404,23 +393,60 @@
                         {airline.id === 'cebu' && <h1 className="text-8xl font-black italic text-white mb-10 drop-shadow-2xl uppercase tracking-tighter">TRAVEL NOW</h1>}
                         <div className={airline.id === 'vueling' ? "vueling-pill w-full max-w-7xl flex p-2 mt-20" : "bg-white p-10 rounded-[2rem] shadow-2xl w-full max-w-7xl mt-10"}>
                             <div className="flex flex-col gap-4 w-full text-black">
+                                
+                                {/* RE-DESIGNED TOGGLE SWITCH */}
+                                <div className="flex justify-center -mt-6 mb-8">
+                                    <div className="flex bg-slate-100 p-1.5 rounded-full shadow-inner border border-slate-200">
+                                        <button 
+                                            onClick={() => setCategory('flight')} 
+                                            className={`flex items-center gap-2 px-8 py-3 rounded-full text-xs font-black uppercase tracking-widest transition-all duration-300 ${category === 'flight' ? 'bg-white text-blue-600 shadow-md transform scale-105' : 'text-slate-400 hover:text-slate-600 hover:bg-slate-200/50'}`}
+                                        >
+                                            <span className="text-lg">✈</span> Flights
+                                        </button>
+                                        <button 
+                                            onClick={() => setCategory('hotel')} 
+                                            className={`flex items-center gap-2 px-8 py-3 rounded-full text-xs font-black uppercase tracking-widest transition-all duration-300 ${category === 'hotel' ? 'bg-white text-blue-600 shadow-md transform scale-105' : 'text-slate-400 hover:text-slate-600 hover:bg-slate-200/50'}`}
+                                        >
+                                            <span className="text-lg">🏨</span> Hotels
+                                        </button>
+                                    </div>
+                                </div>
+
                                 <div className="grid grid-cols-1 md:grid-cols-5 gap-4 items-end">
-                                    <div className="px-4 border-r border-slate-100">
-                                        <label className="text-[10px] font-bold text-gray-400 block mb-1">FROM</label>
-                                        <select className="font-bold w-full focus:outline-none bg-transparent" value={search.from} onChange={(e) => setSearch({...search, from: e.target.value})}>
-                                            {ORIGIN_OPTIONS.map(opt => <option key={opt.code} value={opt.code}>{opt.name}</option>)}
-                                        </select>
-                                    </div>
-                                    <div className="px-4 border-r border-slate-100">
-                                        <label className="text-[10px] font-bold text-gray-400 block mb-1">TO</label>
-                                        <select className="font-bold w-full focus:outline-none bg-transparent" value={search.to} onChange={(e) => setSearch({...search, to: e.target.value})}>
-                                            {DESTINATION_OPTIONS.map(opt => <option key={opt.code} value={opt.code}>{opt.name}</option>)}
-                                        </select>
-                                    </div>
-                                    <div className="px-4 border-r border-slate-100">
-                                        <label className="text-[10px] font-bold text-gray-400 block mb-1">DATE</label>
-                                        <input type="date" className="font-bold w-full focus:outline-none bg-transparent text-sm" value={search.date} onChange={(e) => setSearch({...search, date: e.target.value})} />
-                                    </div>
+                                    {category === 'flight' ? (
+                                        <>
+                                            <div className="px-4 border-r border-slate-100">
+                                                <label className="text-[10px] font-bold text-gray-400 block mb-1">FROM</label>
+                                                <select className="font-bold w-full focus:outline-none bg-transparent" value={search.from} onChange={(e) => setSearch({...search, from: e.target.value})}>
+                                                    {ORIGIN_OPTIONS.map(opt => <option key={opt.code} value={opt.code}>{opt.name}</option>)}
+                                                </select>
+                                            </div>
+                                            <div className="px-4 border-r border-slate-100">
+                                                <label className="text-[10px] font-bold text-gray-400 block mb-1">TO</label>
+                                                <select className="font-bold w-full focus:outline-none bg-transparent" value={search.to} onChange={(e) => setSearch({...search, to: e.target.value})}>
+                                                    {DESTINATION_OPTIONS.map(opt => <option key={opt.code} value={opt.code}>{opt.name}</option>)}
+                                                </select>
+                                            </div>
+                                            <div className="px-4 border-r border-slate-100">
+                                                <label className="text-[10px] font-bold text-gray-400 block mb-1">DATE</label>
+                                                <input type="date" className="font-bold w-full focus:outline-none bg-transparent text-sm" value={search.date} onChange={(e) => setSearch({...search, date: e.target.value})} />
+                                            </div>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <div className="px-4 border-r border-slate-100 col-span-2">
+                                                <label className="text-[10px] font-bold text-gray-400 block mb-1">SELECT HOTEL</label>
+                                                <select className="font-bold w-full focus:outline-none bg-transparent" value={selectedHotel} onChange={(e) => setSelectedHotel(e.target.value)}>
+                                                    {HOTEL_OPTIONS.map(h => <option key={h.id} value={h.id}>{h.name}</option>)}
+                                                </select>
+                                            </div>
+                                            <div className="px-4 border-r border-slate-100">
+                                                <label className="text-[10px] font-bold text-gray-400 block mb-1">CHECK-IN</label>
+                                                <input type="date" className="font-bold w-full focus:outline-none bg-transparent text-sm" defaultValue="2026-03-01" />
+                                            </div>
+                                        </>
+                                    )}
+
                                     <div className="px-4 border-r border-slate-100">
                                         <label className="text-[10px] font-bold text-gray-400 block mb-1">LANGUAGE</label>
                                         <select className="font-bold w-full focus:outline-none bg-transparent" value={language} onChange={(e) => setLanguage(e.target.value)}>
@@ -437,22 +463,18 @@
                         <div className="max-w-5xl mx-auto py-20 px-6 animate-in">
                             <div className="bg-white rounded-[2.5rem] shadow-2xl p-14 flex items-center justify-between text-black border border-slate-100">
                                 <div className="flex flex-col">
-                                    <div className="text-4xl font-black italic tracking-tighter">{search.from} <span className="text-slate-200">✈</span> {search.to}</div>
-                                    <div className="text-slate-400 text-xs mt-2 font-bold uppercase tracking-widest">{new Date(search.date).toDateString()} | Non-Stop</div>
+                                    <div className="text-4xl font-black italic tracking-tighter">
+                                        {category === 'flight' ? (
+                                            <span>{search.from} <span className="text-slate-200">✈</span> {search.to}</span>
+                                        ) : (
+                                            <span>{HOTEL_OPTIONS.find(h => h.id === selectedHotel)?.name}</span>
+                                        )}
+                                    </div>
+                                    <div className="text-slate-400 text-xs mt-2 font-bold uppercase tracking-widest">{new Date(search.date).toDateString()} | {category === 'flight' ? 'Non-Stop' : 'Standard Room'}</div>
                                 </div>
                                 <div className="text-right">
                                     <div className="text-5xl font-black mb-6 tracking-tighter italic">
-                                        {(search.from === 'MNL' && search.to === 'SUG') ? '$190' :
-                                        (search.from === 'SIN' && search.to === 'MNL') ? '₱64,064' :
-                                        (search.from === 'MNL' && search.to === 'LAO') ? '₹13,947' :
-                                        (search.from === 'MNL' && search.to === 'KUL') ? '$45,974' :
-                                        (search.from === 'MNL' && search.to === 'SIN') ? 'S$59,640' :
-                                        (search.from === 'RUH' && search.to === 'MNL') ? '₹59,640' :
-                                        (search.from === 'MEL' && search.to === 'CEB') ? '₱76,761' :
-                                        (search.from === 'ENI' && search.to === 'MNL') ? '₱6,000' :
-                                        (search.from === 'PVG' && search.to === 'MEL') ? '$2,500' :
-                                        (search.from === 'CEB' && search.to === 'MNL') ? '₫18,000' :
-                                        '$2,000'}
+                                        {getDisplayPrice()}
                                     </div>
                                     <button onClick={handlePay} className={`px-16 py-4 uppercase font-black shadow-2xl transition-all hover:scale-105 ${airline.btnStyle}`} style={{ backgroundColor: airline.id === 'cebu' ? '#FFF000' : '#ffdb00', color: '#000' }}>SELECT & PAY</button>
                                 </div>

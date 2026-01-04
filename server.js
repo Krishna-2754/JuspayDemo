@@ -46,6 +46,60 @@ const MTI_PVG_MEL = "{\"lob\":\"Flight\",\"userPersona\":\"B2C\",\"subPersona\":
 
 const MTI_CEB_MNL = "{\"lob\":\"Flight\",\"userPersona\":\"B2C\",\"subPersona\":\"ANONYMOUS\",\"totalUserBookingCount\":null,\"customerType\":\"REPEAT\",\"partnerInfo\":null,\"travelType\":\"Domestic\",\"priceBreakdown\":[{\"id\":\"NkV_CEB_MNL_1\",\"baseAmount\":\"15000\",\"additionalAmounts\":[{\"name\":\"totalInfantPrice\",\"amount\":\"0\"},{\"name\":\"totalSSRPrice\",\"amount\":\"0\"},{\"name\":\"totalTax\",\"amount\":\"3000\"},{\"name\":\"pointsBalanceDue\",\"amount\":\"0\"},{\"name\":\"refundAmount\",\"amount\":\"0\"},{\"name\":\"refundPoint\",\"amount\":\"0\"},{\"name\":\"CashEquilant\",\"amount\":\"0\"},{\"name\":\"CashUsed\",\"amount\":\"0\"}]}],\"metadata\":{\"bookingDetails\":{\"bookingKey\":null,\"pnrType\":\"Oneway\",\"recordLocator\":null,\"parentRecordLocator\":\"\",\"numericRecordLocator\":null,\"bookingStatus\":\"Pending\",\"paymentStatus\":\"Pending\",\"channelType\":0,\"currencyCode\":\"VND\",\"bookedDate\":\"2025-12-30T07:02:00.9634655Z\",\"createdDate\":null,\"expirationDate\":null,\"modifiedDate\":null,\"cancelledDate\":null,\"holdDate\":null,\"createdByAgent\":\"0\",\"createdByRoleCode\":null,\"owningCarrierCode\":null,\"changeAllowed\":true,\"recordLocators\":null,\"showAutoRefundPopUp\":false,\"hasModification\":true,\"specialFareCode\":null,\"promoCode\":null,\"isRedeemTransaction\":false},\"isBookingStateValid\":true,\"journeysDetail\":[{\"journeyKey\":\"NkV_CEB_MNL_JOURNEY\",\"productClass\":\"R\",\"flightType\":\"NonStop\",\"stops\":0,\"specialFareCode\":null,\"promoCode\":null,\"journeydetail\":{\"destination\":\"MNL\",\"origin\":\"CEB\",\"arrival\":\"2026-01-08T10:00:00\",\"departure\":\"2026-01-08T08:30:00\",\"utcarrival\":\"2026-01-08T02:00:00Z\",\"utcdeparture\":\"2026-01-08T00:30:00Z\",\"identifier\":null,\"destinationName\":\"Ninoy Aquino International Airport\",\"originName\":\"Mactan-Cebu International Airport\",\"originCityName\":\"Cebu\",\"destinationCityName\":\"Manila\",\"baggageData\":{\"handBaggageWeight\":7,\"checkinBaggageWeight\":20,\"checkinLimitPerPiece\":0,\"handBaggageCount\":1,\"checkinBaggageCount\":1}},\"segments\":[{\"segmentDetails\":{\"destination\":\"MNL\",\"origin\":\"CEB\",\"arrival\":\"2026-01-08T10:00:00\",\"departure\":\"2026-01-08T08:30:00\",\"utcarrival\":\"2026-01-08T02:00:00Z\",\"utcdeparture\":\"2026-01-08T00:30:00Z\",\"identifier\":{\"identifier\":\"550\",\"carrierCode\":\"5J\",\"opSuffix\":null},\"destinationName\":\"Ninoy Aquino International Airport\",\"originName\":\"Mactan-Cebu International Airport\",\"originCityName\":\"Cebu\",\"destinationCityName\":\"Manila\",\"isCodeShareMealMsgRequired\":null},\"segmentKey\":\"NkV_CEB_MNL_SEG1\",\"legs\":[{\"legKey\":\"LEG_CEB_MNL_1\",\"legDetails\":{\"destination\":\"MNL\",\"origin\":\"CEB\",\"arrival\":\"2026-01-08T10:00:00\",\"departure\":\"2026-01-08T08:30:00\",\"identifier\":{\"identifier\":null,\"carrierCode\":\"\",\"opSuffix\":\"\"},\"utcarrival\":\"2026-01-08T02:00:00Z\",\"utcdeparture\":\"2026-01-08T00:30:00Z\",\"adjustedCapacity\":0,\"arrivalTerminal\":\"3\",\"arrivalTimeVariant\":0,\"backMoveDays\":0,\"capacity\":0,\"changeOfDirection\":false,\"codeShareIndicator\":0,\"departureTerminal\":\"1\",\"departureTimeVariant\":0,\"equipmentType\":\"320\",\"equipmentTypeSuffix\":\"320\",\"eTicket\":true,\"irop\":false,\"lid\":0,\"marketingCode\":null,\"marketingOverride\":false,\"onTime\":null,\"operatedByText\":null,\"operatingCarrier\":null,\"operatingFlightNumber\":null,\"operatingOpSuffix\":null,\"outMoveDays\":0,\"prbcCode\":\"Y186\",\"scheduleServiceType\":\"J\",\"sold\":0,\"status\":0,\"subjectToGovtApproval\":false,\"originName\":\"Mactan-Cebu International Airport\",\"destinationName\":\"Ninoy Aquino International Airport\",\"originCityName\":\"Cebu\",\"destinationCityName\":\"Manila\"},\"designator\":null,\"ssrs\":null}],\"designator\":{\"destination\":\"MNL\",\"origin\":\"CEB\",\"arrival\":\"2026-01-08T10:00:00\",\"departure\":\"2026-01-08T08:30:00\"},\"operatedByText\":null,\"isSeatmapViewable\":true,\"baggageAllowanceWeight\":0,\"baggageAllowanceUsed\":false,\"baggageAllowanceWeightType\":0,\"boardingSequence\":null,\"barcodestring\":null,\"liftStatus\":null,\"hasInfant\":false,\"tickets\":null,\"bundleCode\":null,\"isToShowOTB\":false,\"okToBoardValue\":false,\"seats\":null,\"ssrs\":null,\"seatmapReference\":\"SEAT_CEB_MNL\",\"externalIdentifier\":null,\"international\":false,\"passengerSegment\":null,\"productClass\":\"R\"}]}],\"priceBreakdown\":{\"currencyCode\":\"VND\",\"balanceDue\":18000.0,\"totalAmount\":18000.0,\"totalBaseAmount\":15000.0,\"originalTotal\":18000.0,\"totalPaid\":null,\"pointsBalanceDue\":0.0,\"totalPoints\":0.0,\"totalPointsToCollect\":0.0,\"seatAmount\":null,\"convenienceFee\":0.0,\"bookingPromoCode\":null,\"totalPotentialPoints\":0.0,\"redeemptionFee\":null,\"journeywiseList\":[{\"journeyKey\":\"NkV_CEB_MNL_JOURNEY\",\"journeydetail\":{\"destination\":\"MNL\",\"destinationName\":\"Ninoy Aquino International Airport\",\"origin\":\"CEB\",\"originName\":\"Mactan-Cebu International Airport\",\"arrival\":\"2026-01-08T10:00:00\",\"departure\":\"2026-01-08T08:30:00\",\"utcarrival\":\"2026-01-08T02:00:00Z\",\"utcdeparture\":\"2026-01-08T00:30:00Z\",\"identifier\":null,\"destinationCityName\":\"Manila\",\"originCityName\":\"Cebu\"},\"totalPoints\":0,\"totalDiscount\":0.0,\"infantPrice\":0.0,\"infantCount\":0,\"totalInfantPrice\":0.0,\"totalPaxPrice\":18000.0,\"totalSSRPrice\":0.0,\"totalTax\":3000.0,\"totalAmount\":18000.0,\"totalBaseAmount\":15000.0,\"originalTotal\":null,\"jusPayPricebreakup\":{\"totalInfantPrice\":0.0,\"totalPaxPrice\":18000.0,\"totalSSRPrice\":0.0,\"totalTax\":3000.0,\"totalAmount\":18000.0,\"totalBaseFare\":15000.0,\"pointsBalanceDue\":0,\"CashUsed\":0.0,\"CashEquilant\":0.0,\"refundAmount\":0.0,\"refundPoint\":0.0},\"paxFares\":[{\"fareDiscountCode\":null,\"passengerDiscountCode\":null,\"passengerType\":\"ADT\",\"fareAmount\":18000.0,\"serviceCharges\":[{\"amount\":15000.0,\"detail\":null,\"code\":null,\"currencyCode\":\"VND\",\"points\":0,\"type\":0},{\"amount\":1500.0,\"detail\":\"CEB-MNL\",\"code\":\"PH-TAX\",\"currencyCode\":\"VND\",\"points\":0,\"type\":4},{\"amount\":1500.0,\"detail\":\"CEB-MNL\",\"code\":\"FUEL-SUR\",\"currencyCode\":\"VND\",\"points\":0,\"type\":4}],\"multiplier\":1,\"points\":0}],\"taxAmountList\":[{\"feeCode\":\"PH-TAX\",\"feeName\":\"CEB-MNL\",\"feeCodeName\":\"Passenger Service Charge\",\"value\":1500.0,\"type\":4,\"currencyType\":null},{\"feeCode\":\"FUEL-SUR\",\"feeName\":\"CEB-MNL\",\"feeCodeName\":\"Fuel Surcharge\",\"value\":1500.0,\"type\":4,\"currencyType\":null}],\"ssrAmountList\":[],\"passengerCount\":1,\"airfareCharges\":15000.0,\"pointsBalanceDue\":null}],\"refundList\":null},\"passengers\":[{\"passengerKey\":\"MCFBRFQ-\",\"services\":null,\"specialServices\":null,\"upgrades\":null,\"spoilage\":null,\"nameChanges\":null,\"convenience\":null,\"infant\":null,\"passengerAlternateKey\":null,\"ExtraSeatTag\":null,\"name\":{\"first\":\"Test\",\"middle\":null,\"last\":\"Test\",\"title\":\"MR\",\"suffix\":null},\"passengerTypeCode\":\"ADT\",\"discountCode\":null,\"bags\":null,\"info\":{\"nationality\":null,\"gender\":1,\"dateOfBirth\":null},\"travelDocuments\":null,\"eTicketNumber\":\"hf876876sagd\",\"seatsAndSsrs\":{\"journeys\":[{\"designator\":{\"destination\":\"MNL\",\"origin\":\"CEB\",\"arrival\":\"2026-01-08T10:00:00\",\"departure\":\"2026-01-08T08:30:00\"},\"segments\":[{\"segmentDetails\":{\"destination\":\"MNL\",\"origin\":\"CEB\",\"arrival\":\"2026-01-08T10:00:00\",\"departure\":\"2026-01-08T08:30:00\",\"utcarrival\":\"2026-01-08T02:00:00Z\",\"utcdeparture\":\"2026-01-08T00:30:00Z\",\"identifier\":{\"identifier\":\"550\",\"carrierCode\":\"5J\",\"opSuffix\":null},\"destinationName\":\"Ninoy Aquino International Airport\",\"originName\":\"Mactan-Cebu International Airport\",\"originCityName\":\"Cebu\",\"destinationCityName\":\"Manila\",\"isCodeShareMealMsgRequired\":null},\"segmentKey\":\"NkV_CEB_MNL_SEG1\",\"legs\":[{\"legKey\":\"LEG_CEB_MNL_1\",\"legDetails\":null,\"designator\":{\"destination\":\"MNL\",\"origin\":\"CEB\",\"arrival\":\"2026-01-08T10:00:00\",\"departure\":\"2026-01-08T08:30:00\"},\"ssrs\":null}],\"designator\":{\"destination\":\"MNL\",\"origin\":\"CEB\",\"arrival\":\"2026-01-08T10:00:00\",\"departure\":\"2026-01-08T08:30:00\"},\"operatedByText\":null,\"isSeatmapViewable\":true,\"baggageAllowanceWeight\":0,\"baggageAllowanceUsed\":null,\"baggageAllowanceWeightType\":null,\"boardingSequence\":null,\"barcodestring\":\"M1Test/Test            CEBMNL5J 0000 001Y000Y00000 009\",\"liftStatus\":\"Default\",\"hasInfant\":false,\"tickets\":null,\"bundleCode\":null,\"isToShowOTB\":false,\"okToBoardValue\":false,\"seats\":[],\"ssrs\":[],\"seatmapReference\":null,\"externalIdentifier\":null,\"international\":false,\"passengerSegment\":null,\"productClass\":null}],\"journeyKey\":\"NkV_CEB_MNL_JOURNEY\"}]}}],\"extraSeatKeys\":[],\"configSettings\":{\"FareConfig\":[{\"fareType\":\"SAVER\",\"productClass\":\"R\",\"isMealIncluded\":false,\"isStandarSeatIncluded\":false,\"discountOnXLSeat\":50,\"dateChangecode\":\"D01\",\"cancelCode\":\"C01\",\"SSRsIncluded\":\"\",\"baggageCounts\":{\"checkinBaggage\":1,\"handBaggage\":1,\"doubleSeatAddedBaggage\":1,\"tripleSeatAddedBaggage\":1,\"PromoAddedBaggage\":0,\"doubleSeatAddedBaggag\":null,\"studentPromoAddedBaggage\":null},\"baggageWeights\":{\"handBaggage\":7,\"checkinBaggage\":15,\"DoubleSeatAddedBaggage\":10,\"TripleSeatAddedBaggae\":0,\"PromoAddedBaggae\":0,\"StudentPromoAddedBaggae\":null}}]}},\"agentCode\":\"TESTSS\",\"agentCountryCode\":\"PH\"}";
 
+const MTI_SAVOY = "{\"lob\":\"Hotel\",\"subPersona\":\"ANONYMOUS\",\"priceBreakdown\":[{\"baseAmount\":\"1440\",\"id\":\"\",\"additionalAmounts\":[{\"amount\":\"0\",\"name\":\"taxesAndFees\"}]}],\"metadata\":{\"bookingDetails\":{\"bookedDate\":\"2025-12-30T19:12:42+05:30\"},\"reservationDetails\":[{\"reservationID\":\"\",\"reservationAddress\":{\"reservationCountry\":\"Philippines\",\"reservationCity\":\"Pasay\",\"reservationCountryCode\":\"PH\"},\"brandName\":\"\",\"propertyName\":\"Savoy Hotel Manila near Airport NAIA Terminal 3 MNL\",\"checkInDate\":\"2026-03-01T15:00:00+05:30\",\"checkOutDate\":\"2026-03-03T12:00:00+05:30\",\"roomWiseList\":[{\"id\":\"room1_id\",\"roomType\":\"1 x Essential 1 Queen Room\",\"baseAmount\":\"1440\",\"taxAmountList\":[]}],\"guestBooking\":[{\"guestType\":\"ADT\",\"guestCount\":2},{\"guestType\":\"CHD\",\"guestCount\":1}]}],\"roomWiseList\":[{\"id\":\"room1_id\",\"roomType\":\"1 x Essential 1 Queen Room\",\"baseAmount\":\"1440\",\"taxAmountList\":[{\"feeCode\":\"TOTTAX\",\"feeCodeName\":\"Total room rate including taxes\",\"value\":\"1440\"}]}]}}";
+
+const MTI_MARRIOTT = "{\"lob\":\"Hotel\",\"subPersona\":\"LOYALTY\",\"priceBreakdown\":[{\"baseAmount\":\"28116\",\"id\":\"\",\"additionalAmounts\":[{\"amount\":\"6523\",\"name\":\"taxesAndFees\"}]}],\"metadata\":{\"bookingDetails\":{\"bookedDate\":\"2025-12-30T19:48:00+05:30\"},\"reservationDetails\":[{\"reservationID\":\"\",\"reservationAddress\":{\"reservationCountry\":\"Philippines\",\"reservationCity\":\"Pasay\",\"reservationCountryCode\":\"PH\"},\"brandName\":\"\",\"propertyName\":\"Manila Marriott Hotel at Newport World Resorts\",\"checkInDate\":\"2026-03-05T15:00:00+05:30\",\"checkOutDate\":\"2026-03-06T12:00:00+05:30\",\"roomWiseList\":[{\"id\":\"room1_id\",\"roomType\":\"1 x Delux Room, 1 King Bed, Balcony\",\"baseAmount\":\"28116\",\"taxAmountList\":[]}],\"guestBooking\":[{\"guestType\":\"ADT\",\"guestCount\":1}]}],\"roomWiseList\":[{\"id\":\"room1_id\",\"roomType\":\"1 x Delux Room, 1 King Bed, Balcony\",\"baseAmount\":\"28116\",\"taxAmountList\":[{\"feeCode\":\"TAX\",\"feeCodeName\":\"Hotel Taxes and Fees\",\"value\":\"6523\"},{\"feeCode\":\"TOTTAX\",\"feeCodeName\":\"Total room rate including taxes\",\"value\":\"34639\"}]}]}}";
+
+const MTI_MILLENIUM = "{\"lob\":\"Hotel\",\"subPersona\":\"PARTNER\",\"priceBreakdown\":[{\"baseAmount\":\"55010\",\"id\":\"\",\"additionalAmounts\":[{\"amount\":\"12488\",\"name\":\"taxesAndFees\"}]}],\"metadata\":{\"bookingDetails\":{\"bookedDate\":\"2025-12-30T20:25:45+05:30\"},\"reservationDetails\":[{\"reservationID\":\"\",\"reservationAddress\":{\"reservationCountry\":\"Philippines\",\"reservationCity\":\"Pasig\",\"reservationCountryCode\":\"PH\"},\"brandName\":\"\",\"propertyName\":\"Citadines Millennium Ortigas Manila\",\"checkInDate\":\"2026-03-05T15:00:00+05:30\",\"checkOutDate\":\"2026-03-07T12:00:00+05:30\",\"roomWiseList\":[{\"id\":\"room1_id\",\"roomType\":\"1 x Family Suite, 3 Bedrooms, Non Smoking\",\"baseAmount\":\"55010\",\"taxAmountList\":[]}],\"guestBooking\":[{\"guestType\":\"ADT\",\"guestCount\":1}]}],\"roomWiseList\":[{\"id\":\"room1_id\",\"roomType\":\"1 x Family Suite, 3 Bedrooms, Non Smoking\",\"baseAmount\":\"55010\",\"taxAmountList\":[{\"feeCode\":\"TAX\",\"feeCodeName\":\"Hotel Taxes and Fees\",\"value\":\"12488\"},{\"feeCode\":\"TOTTAX\",\"feeCodeName\":\"Total room rate including taxes\",\"value\":\"67498\"}]}]}}";
+
+const HOTEL_PAYMENT_FILTER = {
+  "options": [
+      { "enable": "true", "paymentMethodType": "CARD", "paymentMethods": null },
+      { "enable": "true", "paymentMethodType": "NB", "paymentMethods": null },
+      { "enable": "true", "paymentMethodType": "UPI", "paymentMethods": null },
+      { "enable": "true", "paymentMethodType": "WALLET", "paymentMethods": null },
+      { "enable": "true", "paymentMethodType": "REWARD", "paymentMethods": null },
+      { "enable": "true", "paymentMethodType": "MERCHANT_CONTAINER", "paymentMethods": null }
+  ],
+  "allowDefaultOptions": true
+};
+
+const HOTEL_ADD_ON_RULES = [
+  { "payment_method_type": "MERCHANT_CONTAINER", "fee": "0.0", "fee_description": "Convenience fees", "sub_details": null, "applicable_per_unit": null },
+  { "payment_method_type": "NB", "fee": "0.0", "fee_description": "Convenience fees", "sub_details": null, "applicable_per_unit": null },
+  { "payment_method_type": "UPI", "fee": "0.0", "fee_description": "Convenience fees", "sub_details": null, "applicable_per_unit": null }
+];
+
+const HOTEL_ROUTES = {
+    "SAVOY": {
+        amount: "1440.00",
+        currency: "USD",
+        mti: MTI_SAVOY,
+        clientId: "indigopp",
+        udf4: "Aurora",
+        paymentFilter: HOTEL_PAYMENT_FILTER,
+        addOnRules: [...HOTEL_ADD_ON_RULES, { "payment_method_type": "CARD", "fee": "0.0", "fee_description": "Reward Redemption Fee", "sub_details": null, "applicable_per_unit": true }]
+    },
+    "MARRIOTT": {
+        amount: "34639.00",
+        currency: "PHP",
+        mti: MTI_MARRIOTT,
+        clientId: "indigopp",
+        udf4: "Aurora",
+        paymentFilter: HOTEL_PAYMENT_FILTER,
+        addOnRules: [...HOTEL_ADD_ON_RULES, { "payment_method_type": "CARD", "fee": "125.0", "fee_description": "Reward Redemption Fee", "sub_details": null, "applicable_per_unit": true }]
+    },
+    "MILLENIUM": {
+        amount: "67498.00",
+        currency: "PHP",
+        mti: MTI_MILLENIUM,
+        clientId: "indigopp",
+        udf4: "Aurora",
+        paymentFilter: HOTEL_PAYMENT_FILTER,
+        paymentRules: { "payment_flows": { "moto_payment": { "status": "OPTIONAL" } } },
+        addOnRules: [...HOTEL_ADD_ON_RULES, { "payment_method_type": "CARD", "fee": "0.0", "fee_description": "Reward Redemption Fee", "sub_details": null, "applicable_per_unit": true }]
+    }
+};
 
 const SHARED_PAYMENT_FILTER = {
   "options": [
@@ -200,6 +254,89 @@ app.post('/fulfill-order', async (req, res) => {
     }
 });
 
+// app.post('/create-session', async (req, res) => {
+//   try {
+//     const { navToken, airlineName, searchData, language } = req.body;
+//     const sessionPNR = generatePNR();
+//     const { from, to } = searchData;
+//     const protocol = req.headers['x-forwarded-proto'] || 'http';
+//     const host = req.get('host');
+//     const dynamicReturnUrl = `${protocol}://${host}?status=success&airline=${encodeURIComponent(airlineName)}&pnr=${sessionPNR}`;
+
+//     // Match route to Scenario
+//     const routeKey = `${from}_${to}`;
+//     const scenario = ROUTES[routeKey] || ROUTES["MNL_SUG"];
+
+//     console.log(`Using Scenario: ${routeKey} | Amount: ${scenario.amount} ${scenario.currency}`);
+
+//     let payload = {
+//       "order_id": `PAH-${Date.now()}`,
+//       "amount": scenario.amount,
+//       "currency": scenario.currency,
+//       "customer_id": "Test123",
+//       "customer_email": "test@gmail.com",
+//       "customer_phone": "9999999999",
+//       "mobile_country_code": "91",
+//       "payment_page_client_id": "cebu",
+//       "action": "paymentPage",
+//       "return_url": dynamicReturnUrl,
+//       "merchant_view_url": "",
+//       "description": null,
+//       "metadata.JUSPAY:gateway_reference_id": "FLIGHT",
+//       "udf3": "RCTT",
+//       "udf4": "Arora",
+//       "udf6": navToken,
+//       "udf7": "20240903",
+//       "udf10": scenario.udf10,
+//       "merchant_session_identifier": navToken,
+//       "metadata.NAVITAIRE:session_expiry_in_sec": "900",
+//       "disable_merchant_integrity_check": true,
+//       "options.get_client_auth_token": scenario.integrity,
+//       "payment_filter": scenario.paymentFilter,
+//       "add_on_amount_rules": scenario.addOnRules,
+//       "merchant_transient_info": scenario.mti,
+//       "metadata.webhook_url": "https://api-uat-skyplus.goindigo.in/postpayment/v1/payment/webhook",
+//       "metadata.expiryInMins": "12",
+//       "language": language || "en",
+//       "payment_rules": scenario.paymentRules,
+//       "metadata.risk_provider": scenario.riskProvider
+//     };
+
+//     if (routeKey === "SIN_MNL") {
+//       payload.reward_rules = REWARD_RULES;
+//     }
+
+//     if (scenario.cardinalRef) {
+//         payload["metadata.CARDINAL:authentication_reference_id"] = scenario.cardinalRef;
+//     }
+
+//     if (scenario.baddress) {
+//         payload["billing_address_country_code_iso"] = scenario.baddress;
+//     }
+
+//     if (scenario.udf) {
+//         payload["udf1"] = scenario.udf;
+//     }
+
+//     if (scenario.autoCapture) {
+//         payload["metadata.txns.auto_capture"] = scenario.autoCapture;
+//     }
+
+//      if (scenario.capCustId) {
+//         payload["metadata.CAPILLARY:customer_id"] = scenario.capCustId;
+//     }
+
+//     const response = await axios.post('https://sandbox.juspay.in/session', payload, {
+//       headers: { 'Authorization': JUSPAY_AUTH, 'Content-Type': 'application/json' }
+//     });
+
+//     res.json({ url: response.data.payment_links.web, sentPayload: payload });
+//   } catch (error) {
+//     console.error("❌ ERROR:", error.response?.data || error.message);
+//     res.status(500).json({ error: error.message });
+//   }
+// });
+
 app.post('/create-session', async (req, res) => {
   try {
     const { navToken, airlineName, searchData, language } = req.body;
@@ -212,64 +349,107 @@ app.post('/create-session', async (req, res) => {
     // Match route to Scenario
     const routeKey = `${from}_${to}`;
     const scenario = ROUTES[routeKey] || ROUTES["MNL_SUG"];
+    let payload = {};
 
-    console.log(`Using Scenario: ${routeKey} | Amount: ${scenario.amount} ${scenario.currency}`);
+    // ----------------------------------------
+    // LOGIC FOR HOTELS
+    // ----------------------------------------
+    if (category === 'hotel') {
+        const hotelConfig = HOTEL_ROUTES[hotelId] || HOTEL_ROUTES["SAVOY"];
+        console.log(`Using Hotel Scenario: ${hotelId} | Amount: ${hotelConfig.amount} ${hotelConfig.currency}`);
 
-    let payload = {
-      "order_id": `PAH-${Date.now()}`,
-      "amount": scenario.amount,
-      "currency": scenario.currency,
-      "customer_id": "Test123",
-      "customer_email": "test@gmail.com",
-      "customer_phone": "9999999999",
-      "mobile_country_code": "91",
-      "payment_page_client_id": "cebu",
-      "action": "paymentPage",
-      "return_url": dynamicReturnUrl,
-      "merchant_view_url": "",
-      "description": null,
-      "metadata.JUSPAY:gateway_reference_id": "FLIGHT",
-      "udf3": "RCTT",
-      "udf4": "Arora",
-      "udf6": navToken,
-      "udf7": "20240903",
-      "udf10": scenario.udf10,
-      "merchant_session_identifier": navToken,
-      "metadata.NAVITAIRE:session_expiry_in_sec": "900",
-      "disable_merchant_integrity_check": true,
-      "options.get_client_auth_token": scenario.integrity,
-      "payment_filter": scenario.paymentFilter,
-      "add_on_amount_rules": scenario.addOnRules,
-      "merchant_transient_info": scenario.mti,
-      "metadata.webhook_url": "https://api-uat-skyplus.goindigo.in/postpayment/v1/payment/webhook",
-      "metadata.expiryInMins": "12",
-      "language": language || "en",
-      "payment_rules": scenario.paymentRules,
-      "metadata.risk_provider": scenario.riskProvider
-    };
+        payload = {
+            "order_id": `PAH-${Date.now()}`,
+            "amount": hotelConfig.amount,
+            "currency": hotelConfig.currency,
+            "customer_id": "Test123",
+            "customer_email": "test@gmail.com",
+            "customer_phone": "9999999999",
+            "mobile_country_code": "91",
+            "payment_page_client_id": "cebu", // "indigopp"
+            "action": "paymentPage",
+            "return_url": dynamicReturnUrl,
+            "merchant_view_url": "",
+            "description": null,
+            "metadata.JUSPAY:gateway_reference_id": "HOTEL",
+            "udf4": hotelConfig.udf4, // "Aurora"
+            "options.get_client_auth_token": true,
+            "payment_filter": hotelConfig.paymentFilter,
+            "merchant_transient_info": hotelConfig.mti,
+            "metadata.webhook_url": "https://en.wikipedia.org/wiki/Philippines",
+            "metadata.expiryInMins": "12",
+            "add_on_amount_rules": hotelConfig.addOnRules,
+            "language": language || "en"
+        };
 
-    if (routeKey === "SIN_MNL") {
-      payload.reward_rules = REWARD_RULES;
-    }
+        if (hotelConfig.rewardRules) {
+            payload.reward_rules = hotelConfig.rewardRules;
+        }
+        if (hotelConfig.paymentRules) {
+            payload.payment_rules = hotelConfig.paymentRules;
+        }
 
-    if (scenario.cardinalRef) {
-        payload["metadata.CARDINAL:authentication_reference_id"] = scenario.cardinalRef;
-    }
+    } 
+    // ----------------------------------------
+    // LOGIC FOR FLIGHTS (Existing)
+    // ----------------------------------------
+    else {
+        const { from, to } = searchData;
+        const routeKey = `${from}_${to}`;
+        const scenario = FLIGHT_ROUTES[routeKey] || FLIGHT_ROUTES["MNL_SUG"];
+        console.log(`Using Flight Scenario: ${routeKey} | Amount: ${scenario.amount} ${scenario.currency}`);
 
-    if (scenario.baddress) {
-        payload["billing_address_country_code_iso"] = scenario.baddress;
-    }
+        payload = {
+            "order_id": `PAH-${Date.now()}`,
+            "amount": scenario.amount,
+            "currency": scenario.currency,
+            "customer_id": "Test123",
+            "customer_email": "test@gmail.com",
+            "customer_phone": "9999999999",
+            "mobile_country_code": "91",
+            "payment_page_client_id": "cebu",
+            "action": "paymentPage",
+            "return_url": dynamicReturnUrl,
+            "merchant_view_url": "",
+            "description": null,
+            "metadata.JUSPAY:gateway_reference_id": "FLIGHT",
+            "udf3": "RCTT",
+            "udf4": "Arora",
+            "udf6": navToken,
+            "udf7": "20240903",
+            "udf10": scenario.udf10,
+            "merchant_session_identifier": navToken,
+            "metadata.NAVITAIRE:session_expiry_in_sec": "900",
+            "disable_merchant_integrity_check": true,
+            "options.get_client_auth_token": scenario.integrity,
+            "payment_filter": scenario.paymentFilter,
+            "add_on_amount_rules": scenario.addOnRules,
+            "merchant_transient_info": scenario.mti,
+            "metadata.webhook_url": "https://api-uat-skyplus.goindigo.in/postpayment/v1/payment/webhook",
+            "metadata.expiryInMins": "12",
+            "language": language || "en",
+            "payment_rules": scenario.paymentRules,
+            "metadata.risk_provider": scenario.riskProvider
+        };
 
-    if (scenario.udf) {
-        payload["udf1"] = scenario.udf;
-    }
-
-    if (scenario.autoCapture) {
-        payload["metadata.txns.auto_capture"] = scenario.autoCapture;
-    }
-
-     if (scenario.capCustId) {
-        payload["metadata.CAPILLARY:customer_id"] = scenario.capCustId;
+        if (routeKey === "SIN_MNL") {
+            payload.reward_rules = REWARD_RULES;
+        }
+        if (scenario.cardinalRef) {
+            payload["metadata.CARDINAL:authentication_reference_id"] = scenario.cardinalRef;
+        }
+        if (scenario.baddress) {
+            payload["billing_address_country_code_iso"] = scenario.baddress;
+        }
+        if (scenario.udf) {
+            payload["udf1"] = scenario.udf;
+        }
+        if (scenario.autoCapture) {
+            payload["metadata.txns.auto_capture"] = scenario.autoCapture;
+        }
+        if (scenario.capCustId) {
+            payload["metadata.CAPILLARY:customer_id"] = scenario.capCustId;
+        }
     }
 
     const response = await axios.post('https://sandbox.juspay.in/session', payload, {
