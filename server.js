@@ -348,7 +348,7 @@ app.post('/create-session', async (req, res) => {
 
     // Match route to Scenario
     const routeKey = `${from}_${to}`;
-    const scenario = ROUTES[routeKey] || ROUTES["MNL_SUG"];
+    const scenario = FLIGHT_ROUTES[routeKey] || FLIGHT_ROUTES["MNL_SUG"];
     let payload = {};
 
     // ----------------------------------------
