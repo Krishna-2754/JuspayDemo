@@ -85,7 +85,7 @@
                 return saved ? JSON.parse(saved) : [];
             });
 
-            const [search, setSearch] = useState({ from: 'MNL', to: 'SUG', date: '2025-12-30', currency: 'USD' });
+            const [search, setSearch] = useState({ from: 'MNL', to: 'SUG', date: '2026-01-01', currency: 'USD' });
 
             const getLogUrl = (type) => {
                 const id = orderId || 'PAH-1767543021004';
@@ -313,7 +313,7 @@
                 }
                 if (search.from === 'MNL' && search.to === 'SUG') return '$190';
                 if (search.from === 'SIN' && search.to === 'MNL') return '₱64,064';
-                if (search.from === 'MNL' && search.to === 'LAO') return '$6000';
+                if (search.from === 'MNL' && search.to === 'LAO') return '$110';
                 if (search.from === 'MNL' && search.to === 'KUL') return '$225';
                 if (search.from === 'MNL' && search.to === 'SIN') return '$340';
                 if (search.from === 'RUH' && search.to === 'MNL') return '₹27,000';
