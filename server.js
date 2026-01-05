@@ -221,7 +221,7 @@ const FLIGHT_ROUTES = {
   "ENI_MNL": { amount: "6000", currency: "PHP", mti: MTI_ENI_MNL, udf10: "NEW_Ios", paymentFilter: SHARED_PAYMENT_FILTER_MNL_SUG, addOnRules: SHARED_ADD_ON_RULES, integrity: true ,refId : "FLIGHT", udf1: "El Nido",udf2: "Manila",udf3: "Desktop", customerId: "Test123"},
   "PVG_MEL": { amount: "2500", currency: "USD", mti: MTI_PVG_MEL, udf10: "NEW_Ios", paymentFilter: SHARED_PAYMENT_FILTER_MNL_KUL, addOnRules: SHARED_ADD_ON_RULES, integrity: true,refId : "FLIGHT" , udf1: "Shanghai",udf2: "Melbourne",udf3: "iOS", customerId: "Test123"},
   "CEB_MNL": { amount: "18000", currency: "VND", mti: MTI_CEB_MNL, udf10: "NEW_Ios", paymentFilter: SHARED_PAYMENT_FILTER_MNL_SUG, addOnRules: [], integrity: true,refId : "FLIGHT" , udf1: "Cebu",udf2: "Manila",udf3: "Android", customerId: "Test123"},
-  "CEB_ENI": { amount: "5000", currency: "PHP", mti: MTI_CEB_MNL, udf10: "NEW_Ios", paymentFilter: SHARED_PAYMENT_FILTER_MNL_SUG, addOnRules: [], integrity: true,refId : "FLIGHT" , udf1: "Cebu",udf2: "El Nido",udf3: "Android", customerId: "Test456"}
+  "CEB_ENI": { amount: "8000", currency: "PHP", mti: MTI_CEB_MNL, udf10: "NEW_Ios", paymentFilter: SHARED_PAYMENT_FILTER_MNL_SUG, addOnRules: [], integrity: true,refId : "FLIGHT" , udf1: "Cebu",udf2: "El Nido",udf3: "Android", customerId: "Test456"}
 };
 
 // --- FULFILLMENT ENDPOINT ---
