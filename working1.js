@@ -98,7 +98,7 @@ const SHARED_ADD_ON_RULES = [
   { "payment_method_type": "MERCHANT_CONTAINER", "fee": "199.0", "fee_description": "Convenience fees" },
   { "payment_method_type": "NB", "fee": "199.0", "fee_description": "Convenience fees" },
   { "payment_method_type": "UPI", "fee": "199.0", "fee_description": "Convenience fees" },
-  { "payment_method_type": "CARD", "fee": "200.0", "fee_description": "Reward Redemption Fee", "applicable_per_unit": true }
+  { "payment_method_type": "CARD", "fee": "200.0", "fee_description": "Convienence Fees", "applicable_per_unit": true }
 ];
 
 const REWARD_RULES = [{

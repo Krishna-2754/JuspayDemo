@@ -79,7 +79,7 @@ const HOTEL_ROUTES = {
         clientId: "indigopp",
         udf4: "Aurora",
         paymentFilter: HOTEL_PAYMENT_FILTER,
-        addOnRules: [...HOTEL_ADD_ON_RULES, { "payment_method_type": "CARD", "fee": "0.0", "fee_description": "Reward Redemption Fee", "sub_details": null, "applicable_per_unit": true }]
+        addOnRules: [...HOTEL_ADD_ON_RULES, { "payment_method_type": "CARD", "fee": "0.0", "fee_description": "Convienence Fees", "sub_details": null, "applicable_per_unit": true }]
     },
     "MARRIOTT": {
         amount: "34639.00",
@@ -88,7 +88,7 @@ const HOTEL_ROUTES = {
         clientId: "indigopp",
         udf4: "Aurora",
         paymentFilter: HOTEL_PAYMENT_FILTER,
-        addOnRules: [...HOTEL_ADD_ON_RULES, { "payment_method_type": "CARD", "fee": "125.0", "fee_description": "Reward Redemption Fee", "sub_details": null, "applicable_per_unit": true }]
+        addOnRules: [...HOTEL_ADD_ON_RULES, { "payment_method_type": "CARD", "fee": "125.0", "fee_description": "Convienence Fees", "sub_details": null, "applicable_per_unit": true }]
     },
     "MILLENIUM": {
         amount: "67498.00",
@@ -98,7 +98,7 @@ const HOTEL_ROUTES = {
         udf4: "Aurora",
         paymentFilter: HOTEL_PAYMENT_FILTER,
         paymentRules: { "payment_flows": { "moto_payment": { "status": "OPTIONAL" } } },
-        addOnRules: [...HOTEL_ADD_ON_RULES, { "payment_method_type": "CARD", "fee": "0.0", "fee_description": "Reward Redemption Fee", "sub_details": null, "applicable_per_unit": true }]
+        addOnRules: [...HOTEL_ADD_ON_RULES, { "payment_method_type": "CARD", "fee": "0.0", "fee_description": "Convienence Fees", "sub_details": null, "applicable_per_unit": true }]
     }
 };
 
@@ -149,10 +149,10 @@ const SHARED_PAYMENT_FILTER_MNL_KUL = {
 };
 
 const SHARED_ADD_ON_RULES = [
-  { "payment_method_type": "MERCHANT_CONTAINER", "fee": "199.0", "fee_description": "Convenience fees" },
-  { "payment_method_type": "NB", "fee": "199.0", "fee_description": "Convenience fees" },
-  { "payment_method_type": "UPI", "fee": "199.0", "fee_description": "Convenience fees" },
-  { "payment_method_type": "CARD", "fee": "200.0", "fee_description": "Reward Redemption Fee", "applicable_per_unit": true }
+  { "payment_method_type": "MERCHANT_CONTAINER", "fee": "25.0", "fee_description": "Convenience fees" },
+  { "payment_method_type": "NB", "fee": "40.0", "fee_description": "Convenience fees" },
+  { "payment_method_type": "UPI", "fee": "30.0", "fee_description": "Convenience fees" },
+  { "payment_method_type": "CARD", "fee": "20.0", "fee_description": "Convienence Fees", "applicable_per_unit": true }
 ];
 
 const REWARD_RULES = [{
@@ -209,8 +209,8 @@ const PAYMENT_RULES_SIN_MNL = {
 };
 
 const FLIGHT_ROUTES = {
-  "MNL_SUG": { amount: "190", currency: "PHP", mti: MTI_MNL_SUG, udf10: "NEW_Ios", paymentFilter: SHARED_PAYMENT_FILTER_MNL_SUG, addOnRules: SHARED_ADD_ON_RULES , integrity: true, refId : "FLIGHT", udf1: "Manila",udf2: "Surigao",udf3: "Desktop"},
-  "SIN_MNL": { amount: "9500", currency: "INR", mti: MTI_SIN_MNL, udf10: "NEW_Ios", paymentFilter: SHARED_PAYMENT_FILTER_MNL_SUG, addOnRules: [], riskProvider: "JUSPAYFRM", capCustId: "000014464",integrity: true,refId : "FLIGHT" , udf1: "Singapore",udf2: "Manila",udf3: "Android", baddress: "PH"},
+  "MNL_SUG": { amount: "190", currency: "USD", mti: MTI_MNL_SUG, udf10: "NEW_Ios", paymentFilter: SHARED_PAYMENT_FILTER_MNL_SUG, addOnRules: SHARED_ADD_ON_RULES , integrity: true, refId : "FLIGHT", udf1: "Manila",udf2: "Surigao",udf3: "Desktop"},
+  "SIN_MNL": { amount: "9500", currency: "PHP", mti: MTI_SIN_MNL, udf10: "NEW_Ios", paymentFilter: SHARED_PAYMENT_FILTER_MNL_SUG, addOnRules: [], riskProvider: "JUSPAYFRM", capCustId: "000014464",integrity: true,refId : "FLIGHT" , udf1: "Singapore",udf2: "Manila",udf3: "Android", baddress: "PH"},
   "MNL_LAO": { amount: "110", currency: "SGD", mti: MTI_MNL_LAO, udf10: "NEW_Ios", paymentFilter: SHARED_PAYMENT_FILTER_MNL_LAO, addOnRules: [] , paymentRules: PAYMENT_RULES_SIN_MNL, integrity: true,refId : "FLIGHT", udf1: "Manila",udf2: "Laoag",udf3: "mWeb"},
   "MNL_KUL": { amount: "225", currency: "USD", mti: MTI_MNL_KUL, udf10: "NEW_Ios", paymentFilter: SHARED_PAYMENT_FILTER_MNL_KUL, addOnRules: SHARED_ADD_ON_RULES ,cardinalRef: "auth_cardinal", baddress: "US", integrity: true, refId : "AUXILIARY", udf1: "Manila",udf2: "Kuala Lampur",udf3: "iOS"},
   "MNL_SIN": { amount: "340", currency: "SGD", mti: MTI_MNL_SIN, udf10: "NEW_Ios", paymentFilter: SHARED_PAYMENT_FILTER_MNL_SUG, addOnRules: SHARED_ADD_ON_RULES, udf: "AUXILLARY" , autoCapture: "false", baddress: "SG", paymentRules: PAYMENT_RULES_SIN_MNL, integrity: true,refId : "FLIGHT", udf1: "Manila",udf2: "Singapore",udf3: "Desktop"},
@@ -253,6 +253,14 @@ app.post('/create-session', async (req, res) => {
   try {
     const { navToken, airlineName, searchData, language, category, hotelId } = req.body;
     const sessionPNR = generatePNR();
+    const { from, to } = searchData;
+    const protocol = req.headers['x-forwarded-proto'] || 'http';
+    const host = req.get('host');
+    const dynamicReturnUrl = `${protocol}://${host}?status=success&airline=${encodeURIComponent(airlineName)}&pnr=${sessionPNR}`;
+
+    // Match route to Scenario
+    const routeKey = `${from}_${to}`;
+    const scenario = FLIGHT_ROUTES[routeKey] || FLIGHT_ROUTES["MNL_SUG"];
     let payload = {};
 
     // ----------------------------------------
@@ -272,7 +280,7 @@ app.post('/create-session', async (req, res) => {
             "mobile_country_code": "91",
             "payment_page_client_id": "cebu", // "indigopp"
             "action": "paymentPage",
-            "return_url": `http://localhost:3000?status=success&airline=${airlineName}&pnr=${sessionPNR}`,
+            "return_url": dynamicReturnUrl,
             "merchant_view_url": "",
             "description": null,
             "metadata.JUSPAY:gateway_reference_id": "HOTEL",
@@ -313,7 +321,7 @@ app.post('/create-session', async (req, res) => {
             "mobile_country_code": "91",
             "payment_page_client_id": "cebu",
             "action": "paymentPage",
-            "return_url": `http://localhost:3000?status=success&airline=${airlineName}&pnr=${sessionPNR}`,
+            "return_url": dynamicReturnUrl,
             "merchant_view_url": "",
             "description": null,
             "metadata.JUSPAY:gateway_reference_id": scenario.refId,
@@ -336,9 +344,9 @@ app.post('/create-session', async (req, res) => {
             "metadata.risk_provider": scenario.riskProvider
         };
 
-        // if (routeKey === "SIN_MNL") {
-        //     payload.reward_rules = REWARD_RULES;
-        // }
+        if (routeKey === "SIN_MNL") {
+            payload.reward_rules = REWARD_RULES;
+        }
         if (scenario.cardinalRef) {
             payload["metadata.CARDINAL:authentication_reference_id"] = scenario.cardinalRef;
         }
