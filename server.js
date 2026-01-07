@@ -215,13 +215,14 @@ const FLIGHT_ROUTES = {
   "SIN_MNL": { amount: "9500", currency: "PHP", mti: MTI_SIN_MNL, udf10: "NEW_Ios", paymentFilter: SHARED_PAYMENT_FILTER_MNL_SUG, addOnRules: [], riskProvider: "JUSPAYFRM", capCustId: "000014464",integrity: true,refId : "FLIGHT" , udf1: "Singapore",udf2: "Manila",udf3: "Android", baddress: "PH", customerId: "Test123"},
   "MNL_LAO": { amount: "110", currency: "SGD", mti: MTI_MNL_LAO, udf10: "NEW_Ios", paymentFilter: SHARED_PAYMENT_FILTER_MNL_LAO, addOnRules: [] , paymentRules: PAYMENT_RULES_SIN_MNL, integrity: true,refId : "FLIGHT", udf1: "Manila",udf2: "Laoag",udf3: "mWeb", customerId: "Test123"},
   "MNL_KUL": { amount: "225", currency: "USD", mti: MTI_MNL_KUL, udf10: "NEW_Ios", paymentFilter: SHARED_PAYMENT_FILTER_MNL_KUL, addOnRules: SHARED_ADD_ON_RULES ,cardinalRef: "auth_cardinal", baddress: "US", integrity: true, refId : "AUXILIARY", udf1: "Manila",udf2: "Kuala Lampur",udf3: "iOS", customerId: "Test123"},
-  "MNL_SIN": { amount: "340", currency: "SGD", mti: MTI_MNL_SIN, udf10: "NEW_Ios", paymentFilter: SHARED_PAYMENT_FILTER_MNL_SUG, addOnRules: SHARED_ADD_ON_RULES, udf: "AUXILLARY" , autoCapture: "false", baddress: "SG", paymentRules: PAYMENT_RULES_SIN_MNL, integrity: true,refId : "FLIGHT", udf1: "Manila",udf2: "Singapore",udf3: "Desktop", customerId: "Test123"},
+  "MNL_SIN": { amount: "340", currency: "SGD", mti: MTI_MNL_SIN, udf10: "NEW_Ios", paymentFilter: SHARED_PAYMENT_FILTER_MNL_SUG, addOnRules: SHARED_ADD_ON_RULES, udf: "AUXILLARY" , baddress: "SG", paymentRules: PAYMENT_RULES_SIN_MNL, integrity: true,refId : "FLIGHT", udf1: "Manila",udf2: "Singapore",udf3: "Desktop", customerId: "Test123", autoCapture: true},
   "RUH_MNL": { amount: "27000", currency: "INR", mti: MTI_RUH_MNL, udf10: "NEW_Ios", paymentFilter: SHARED_PAYMENT_FILTER_MNL_SUG, addOnRules: SHARED_ADD_ON_RULES ,integrity: true,refId : "FLIGHT", isEmi : true, udf1: "Riyadh",udf2: "Manila",udf3: "mWeb", customerId: "Test123"},
   "MEL_CEB": { amount: "14225", currency: "PHP", mti: MTI_MEL_CEB, udf10: "NEW_Ios", paymentFilter: SHARED_PAYMENT_FILTER_MNL_SUG, addOnRules: SHARED_ADD_ON_RULES , integrity: false, riskProvider: "JUSPAYFRM",refId : "FLIGHT", udf1: "Melbourne",udf2: "Cebu",udf3: "Android", customerId: "Test123"},
   "ENI_MNL": { amount: "6000", currency: "PHP", mti: MTI_ENI_MNL, udf10: "NEW_Ios", paymentFilter: SHARED_PAYMENT_FILTER_MNL_SUG, addOnRules: SHARED_ADD_ON_RULES, integrity: true ,refId : "FLIGHT", udf1: "El Nido",udf2: "Manila",udf3: "Desktop", customerId: "Test123"},
   "PVG_MEL": { amount: "2500", currency: "USD", mti: MTI_PVG_MEL, udf10: "NEW_Ios", paymentFilter: SHARED_PAYMENT_FILTER_MNL_KUL, addOnRules: SHARED_ADD_ON_RULES, integrity: true,refId : "FLIGHT" , udf1: "Shanghai",udf2: "Melbourne",udf3: "iOS", customerId: "Test123"},
   "CEB_MNL": { amount: "18000", currency: "VND", mti: MTI_CEB_MNL, udf10: "NEW_Ios", paymentFilter: SHARED_PAYMENT_FILTER_MNL_SUG, addOnRules: [], integrity: true,refId : "FLIGHT" , udf1: "Cebu",udf2: "Manila",udf3: "Android", customerId: "Test123"},
-  "CEB_ENI": { amount: "8000", currency: "PHP", mti: MTI_CEB_MNL, udf10: "NEW_Ios", paymentFilter: SHARED_PAYMENT_FILTER_MNL_SUG, addOnRules: [], integrity: true,refId : "FLIGHT" , udf1: "Cebu",udf2: "El Nido",udf3: "Android", customerId: "Test456"}
+  "CEB_ENI": { amount: "8000", currency: "PHP", mti: MTI_CEB_MNL, udf10: "NEW_Ios", paymentFilter: SHARED_PAYMENT_FILTER_MNL_SUG, addOnRules: [], integrity: true,refId : "FLIGHT" , udf1: "Cebu",udf2: "El Nido",udf3: "Android", customerId: "Test456"},
+  "CEB_LAO": { amount: "5000", currency: "PHP", mti: MTI_CEB_MNL, udf10: "NEW_Ios", paymentFilter: SHARED_PAYMENT_FILTER_MNL_SUG, addOnRules: SHARED_ADD_ON_RULES, integrity: true,refId : "FLIGHT1" , udf1: "Cebu",udf2: "Laoag",udf3: "Android", customerId: "Test123", paymentRules: PAYMENT_RULES_SIN_MNL},
 };
 
 // --- FULFILLMENT ENDPOINT ---
@@ -332,7 +333,6 @@ app.post('/create-session', async (req, res) => {
             "udf2": scenario.udf2,
             "udf3": scenario.udf3,
             "udf6": navToken,
-            "udf10": scenario.udf10,
             "merchant_session_identifier": navToken,
             "metadata.NAVITAIRE:session_expiry_in_sec": "900",
             "metadata.disable_merchant_integrity_check": scenario.integrity,
@@ -360,7 +360,7 @@ app.post('/create-session', async (req, res) => {
             payload["udf1"] = scenario.udf;
         }
         if (scenario.autoCapture) {
-            payload["metadata.txns.auto_capture"] = scenario.autoCapture;
+            payload["metadata.txns.auto_capture"] = "false";
         }
         if (scenario.capCustId) {
             payload["metadata.CAPILLARY:customer_id"] = scenario.capCustId;
