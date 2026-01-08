@@ -158,10 +158,10 @@ const SHARED_ADD_ON_RULES = [
 ];
 
 const REWARD_RULES = [{
-  "conversion_ratio": 1, "flow_type": "BURN", "max_redeemable_points": 10000,
-  "min_redeemable_points": 10000, "payment_method": "CAPILLARY_REWARD",
-  "reward_buckets": [{ "cash_eq": "10000", "id": "6fae5307", "points": "10000" }],
-  "user_balance": 10000
+  "conversion_ratio": 1, "flow_type": "BURN", "max_redeemable_points": 2500,
+  "min_redeemable_points": 2500, "payment_method": "CAPILLARY_REWARD",
+  "reward_buckets": [{ "cash_eq": "2500", "id": "6fae5307", "points": "2500" }],
+  "user_balance": 2500
 }];
 
 const PAYMENT_RULES_SIN_MNL = {
